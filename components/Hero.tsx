@@ -32,9 +32,9 @@ export default function Hero() {
           </a>
         </div>
       </div>
-      <div className="relative order-first mx-auto w-1/2 lg:order-none lg:w-full">
+      <div className="relative order-first mx-auto w-fit lg:order-none">
         <div className="absolute -top-6 -right-6 h-full w-full rounded-2xl border-2 border-gold/40" />
-        <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl">
+        <div className="relative aspect-4/5 h-[32dvh] max-w-full overflow-hidden rounded-2xl sm:h-[38dvh] lg:h-[52dvh]">
           <MarketIllustration />
         </div>
       </div>

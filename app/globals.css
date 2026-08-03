@@ -46,4 +46,68 @@
     font-size: 13px;
     color: rgb(21 36 32 / 0.5);
   }
+
+  @keyframes draw-line {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes pop-in {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes glow-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes glow-breathe {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+
+  .hero-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-line 1.6s 0.3s ease-out forwards;
+  }
+
+  .hero-dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    animation: pop-in 0.5s 1.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .hero-glow {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    animation:
+      glow-in 0.6s 1.9s ease-out forwards,
+      glow-breathe 2.4s 2.5s ease-in-out infinite;
+  }
 }

@@ -55,7 +55,14 @@ export default function MarketIllustration() {
         strokeLinejoin="round"
       />
 
-      <circle cx="340" cy="90" r="26" fill="#c9982e" opacity="0.35" filter="url(#glow)" />
+      <circle
+        cx="340"
+        cy="90"
+        r="26"
+        fill="#c9982e"
+        filter="url(#glow)"
+        className="hero-glow"
+      />
 
       <path
         d="M 60 440 C 130 420, 160 340, 210 300 C 260 260, 270 180, 340 90"
@@ -63,13 +70,17 @@ export default function MarketIllustration() {
         stroke="#c9982e"
         strokeWidth="4"
         strokeLinecap="round"
+        pathLength="1"
+        className="hero-line"
       />
 
       <circle cx="130" cy="420" r="3.5" fill="#c9982e" opacity="0.55" />
       <circle cx="210" cy="300" r="3.5" fill="#c9982e" opacity="0.7" />
 
-      <circle cx="340" cy="90" r="13" fill="none" stroke="#c9982e" strokeWidth="1" opacity="0.4" />
-      <circle cx="340" cy="90" r="7" fill="#c9982e" />
+      <g className="hero-dot">
+        <circle cx="340" cy="90" r="13" fill="none" stroke="#c9982e" strokeWidth="1" opacity="0.4" />
+        <circle cx="340" cy="90" r="7" fill="#c9982e" />
+      </g>
     </svg>
   );
 }
