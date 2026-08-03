@@ -7,7 +7,7 @@ export default function Sobre() {
         <div className="relative">
           <div className="absolute top-5 left-5 h-full w-full rounded-2xl border-2 border-gold/35" />
           <Image
-            src="/marco-kayser-institucional.png"
+            src="/marco-kayser.png"
             alt="Marco Kayser"
             width={800}
             height={1000}

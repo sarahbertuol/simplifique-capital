@@ -1,4 +1,4 @@
-import Image from "next/image";
+import MarketIllustration from "./MarketIllustration";
 
 export default function Hero() {
   return (
@@ -34,14 +34,9 @@ export default function Hero() {
       </div>
       <div className="relative">
         <div className="absolute -top-6 -right-6 h-full w-full rounded-2xl border-2 border-gold/40" />
-        <Image
-          src="/marco-kayser.png"
-          alt="Marco Kayser"
-          width={800}
-          height={1000}
-          className="relative block aspect-4/5 w-full rounded-2xl object-cover"
-          priority
-        />
+        <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl">
+          <MarketIllustration />
+        </div>
       </div>
     </section>
   );
