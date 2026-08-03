@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const STEPS = [
   {
     title: "Diagnóstico financeiro completo",
@@ -53,9 +55,13 @@ export default function Programa() {
             ))}
           </div>
         </div>
-        <div className="placeholder-img flex aspect-square items-center justify-center rounded-2xl">
-          <span className="placeholder-label">ilustração / etapas do programa</span>
-        </div>
+        <Image
+          src="/programa-etapas.jpeg"
+          alt="Etapas do Programa de Educação Financeira"
+          width={768}
+          height={1376}
+          className="aspect-[768/1376] w-full max-w-[420px] justify-self-center rounded-2xl object-cover"
+        />
       </div>
     </section>
   );
