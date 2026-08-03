@@ -5,6 +5,21 @@ const PATRIMONIO_OPTIONS = [
   "Acima de R$ 1 milhão",
 ];
 
+const SERVICO_OPTIONS = [
+  "Programa de Educação Financeira",
+  "Flat Fee",
+  "Consultoria Pontual",
+  "Não sei ainda",
+];
+
+const NIVEL_OPTIONS = [
+  "Nunca investi e não entendo de investimentos",
+  "Tenho pouca experiência e quero aprender do zero",
+  "Já invisto, mas sem uma estratégia clara",
+  "Tenho experiência, mas quero profissionalizar minha carteira",
+  "Sou experiente e busco uma segunda opinião especializada",
+];
+
 export default function Contato() {
   return (
     <section id="contato" className="bg-green-800 px-8 py-24 md:px-16 lg:py-30">
@@ -62,10 +77,30 @@ export default function Contato() {
           </div>
           <div className="mb-[18px] flex flex-col gap-2">
             <label className="text-xs font-bold tracking-[0.3px] text-green-700">
+              QUAL SERVIÇO VOCÊ BUSCA?
+            </label>
+            <select className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm">
+              {SERVICO_OPTIONS.map((opt) => (
+                <option key={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-[18px] flex flex-col gap-2">
+            <label className="text-xs font-bold tracking-[0.3px] text-green-700">
               PATRIMÔNIO APROXIMADO
             </label>
             <select className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm">
               {PATRIMONIO_OPTIONS.map((opt) => (
+                <option key={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-[18px] flex flex-col gap-2">
+            <label className="text-xs font-bold tracking-[0.3px] text-green-700">
+              COMO VOCÊ AVALIA SEU NÍVEL DE CONHECIMENTO EM INVESTIMENTOS?
+            </label>
+            <select className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm">
+              {NIVEL_OPTIONS.map((opt) => (
                 <option key={opt}>{opt}</option>
               ))}
             </select>

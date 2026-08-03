@@ -62,6 +62,14 @@ const PATRIMONIOS = [
   "Acima de R$ 10 milhões",
 ];
 
+const NIVEIS_CONHECIMENTO = [
+  "Nunca investi e não entendo de investimentos",
+  "Tenho pouca experiência e quero aprender do zero",
+  "Já invisto, mas sem uma estratégia clara",
+  "Tenho experiência, mas quero profissionalizar minha carteira",
+  "Sou experiente e busco uma segunda opinião especializada",
+];
+
 function RadioOption({
   label,
   selected,
@@ -101,6 +109,7 @@ export default function PlanosEModal() {
   const [whatsError, setWhatsError] = useState(false);
   const [objetivo, setObjetivo] = useState<string | null>(null);
   const [patrimonio, setPatrimonio] = useState<string | null>(null);
+  const [nivel, setNivel] = useState<string | null>(null);
 
   function openModal(planTitle: string) {
     setPlan(planTitle);
@@ -110,6 +119,7 @@ export default function PlanosEModal() {
     setWhatsError(false);
     setObjetivo(null);
     setPatrimonio(null);
+    setNivel(null);
     setSubmitted(false);
     setStep(1);
     setOpen(true);
@@ -239,11 +249,11 @@ export default function PlanosEModal() {
                   <div className="h-1 flex-1 overflow-hidden rounded-full bg-green-700/10">
                     <div
                       className="h-full rounded-full bg-gold transition-[width] duration-[250ms] ease-out"
-                      style={{ width: `${(step / 3) * 100}%` }}
+                      style={{ width: `${(step / 4) * 100}%` }}
                     />
                   </div>
                   <div className="text-xs font-bold whitespace-nowrap text-green-700/50">
-                    0{step}/03
+                    0{step}/04
                   </div>
                 </div>
 
@@ -353,6 +363,39 @@ export default function PlanosEModal() {
                     <div className="mt-6 flex gap-3">
                       <button
                         onClick={() => goStep(2)}
+                        className="flex-1 cursor-pointer rounded-lg bg-green-700/6 py-[15px] text-[15px] font-bold text-green-700"
+                      >
+                        Voltar
+                      </button>
+                      <button
+                        onClick={() => goStep(4)}
+                        className="flex-[2] cursor-pointer rounded-lg bg-green-800 py-[15px] text-[15px] font-bold text-white"
+                      >
+                        Continuar
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {step === 4 && (
+                  <div>
+                    <p className="mb-6 text-sm leading-[1.5] text-green-700/60">
+                      Como você avalia seu nível de conhecimento em
+                      investimentos?
+                    </p>
+                    <div>
+                      {NIVEIS_CONHECIMENTO.map((label) => (
+                        <RadioOption
+                          key={label}
+                          label={label}
+                          selected={nivel === label}
+                          onSelect={() => setNivel(label)}
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-6 flex gap-3">
+                      <button
+                        onClick={() => goStep(3)}
                         className="flex-1 cursor-pointer rounded-lg bg-green-700/6 py-[15px] text-[15px] font-bold text-green-700"
                       >
                         Voltar
