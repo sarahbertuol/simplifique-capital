@@ -31,20 +31,6 @@ export default function Hero() {
             Falar no WhatsApp →
           </a>
         </div>
-        <div className="mt-14 flex gap-12">
-          <div>
-            <div className="font-display text-[30px] font-black text-white">300+</div>
-            <div className="mt-1 text-xs tracking-[0.5px] text-white/55">
-              CLIENTES ATENDIDOS
-            </div>
-          </div>
-          <div>
-            <div className="font-display text-[30px] font-black text-white">R$104M+</div>
-            <div className="mt-1 text-xs tracking-[0.5px] text-white/55">
-              EM PATRIMÔNIO ASSESSORADO
-            </div>
-          </div>
-        </div>
       </div>
       <div className="relative">
         <div className="absolute -top-6 -right-6 h-full w-full rounded-2xl border-2 border-gold/40" />
