@@ -1,5 +1,7 @@
+import Image from "next/image";
+
 const BIO_STATS = [
-  { val: "20+", lbl: "ANOS DE EXPERIÊNCIA" },
+  { val: "25+", lbl: "ANOS COMO INVESTIDOR" },
   { val: "4", lbl: "ANOS NA XP INVESTIMENTOS" },
   { val: "300+", lbl: "CLIENTES ATENDIDOS" },
   { val: "R$104M+", lbl: "PATRIMÔNIO ASSESSORADO" },
@@ -11,9 +13,13 @@ export default function Sobre() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-16 lg:grid-cols-2">
         <div className="relative">
           <div className="absolute top-5 left-5 h-full w-full rounded-2xl border-2 border-gold/35" />
-          <div className="placeholder-img relative flex aspect-4/5 items-center justify-center rounded-2xl">
-            <span className="placeholder-label">foto institucional</span>
-          </div>
+          <Image
+            src="/marco-kayser-institucional.png"
+            alt="Marco Kayser"
+            width={800}
+            height={1000}
+            className="relative block aspect-4/5 w-full rounded-2xl object-cover"
+          />
         </div>
         <div>
           <div className="mb-7 inline-block rounded-full border border-gold-dark/50 px-[18px] py-2 text-xs font-bold tracking-[1px] text-gold-dark">
@@ -23,7 +29,7 @@ export default function Sobre() {
             Sobre Marco Kayser
           </h2>
           <p className="mb-5 text-base leading-[1.7] text-green-700/70">
-            Marco Kayser atua há mais de 20 anos no mercado financeiro, com
+            Marco Kayser atua há mais de 25 anos no mercado financeiro, com
             passagem como assessor de investimentos na XP Investimentos por 4
             anos, auxiliando centenas de investidores a organizar e
             simplificar suas carteiras.

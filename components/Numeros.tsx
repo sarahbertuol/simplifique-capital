@@ -1,5 +1,5 @@
 const STATS = [
-  { val: "20+", lbl: "ANOS NO MERCADO FINANCEIRO" },
+  { val: "25+", lbl: "ANOS NO MERCADO FINANCEIRO" },
   { val: "4", lbl: "ANOS COMO ASSESSOR NA XP INVESTIMENTOS" },
   { val: "300+", lbl: "CLIENTES ATENDIDOS" },
   { val: "R$104M+", lbl: "EM PATRIMÔNIO ASSESSORADO" },
