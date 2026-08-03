@@ -4,7 +4,7 @@ export default function Sobre() {
   return (
     <section id="sobre" className="px-8 py-24 md:px-16 lg:py-30">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-16 lg:grid-cols-2">
-        <div className="relative">
+        <div className="relative order-last lg:order-none">
           <div className="absolute top-5 left-5 h-full w-full rounded-2xl border-2 border-gold/35" />
           <Image
             src="/marco-kayser.png"
@@ -22,19 +22,23 @@ export default function Sobre() {
             Sobre Marco Kayser
           </h2>
           <p className="mb-5 text-base leading-[1.7] text-green-700/70">
-            Depois de 4 anos como assessor de investimentos na XP
-            Investimentos, Marco viu de perto como o mercado tradicional
-            funciona — priorizando comissões e produtos empurrados em vez do
-            que realmente faz sentido para cada cliente.
+            Foram 4 anos como assessor de investimentos na XP Investimentos —
+            uma experiência que ajudou Marco a definir com clareza o tipo de
+            trabalho que queria construir: sem conflito de interesses, com
+            total transparência, e sempre pensando no que faz mais sentido
+            para cada cliente.
           </p>
           <p className="mb-5 text-base leading-[1.7] text-green-700/70">
-            Foi esse contraste que o levou a criar o Programa de Educação
-            Financeira: uma forma de simplificar o processo de investir e
-            construir um mercado mais justo, sem conflito de interesses.
+            Foi a partir dessa visão que nasceu o Programa de Educação
+            Financeira: uma forma de simplificar o processo de investir, sem
+            produtos empurrados ou vieses de remuneração — só o que
+            realmente faz sentido para o seu momento.
           </p>
           <p className="text-base leading-[1.7] text-green-700/70">
             Aqui, a entrega é sempre o que você realmente precisa — sem
-            produtos empurrados, sem letras miúdas, sem amarras.
+            letras miúdas, sem conflito de interesse, sem amarras. E o que
+            ele ensina no programa é exatamente o que aplica na própria
+            carteira.
           </p>
         </div>
       </div>

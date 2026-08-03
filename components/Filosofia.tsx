@@ -16,7 +16,7 @@ export default function Filosofia() {
           alt="Diagrama de alocação de carteira"
           width={1024}
           height={1024}
-          className="aspect-square w-full rounded-2xl object-cover"
+          className="order-last aspect-square w-full rounded-2xl object-cover lg:order-none"
         />
         <div>
           <div className="mb-4 text-[13px] font-bold tracking-[1.5px] text-gold-dark">

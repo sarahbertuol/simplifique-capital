@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Logo from "./Logo";
 
 const LINKS = [
@@ -7,26 +10,61 @@ const LINKS = [
 ];
 
 export default function Nav() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="sticky top-0 z-50 flex items-center justify-between bg-green-800 px-8 py-5 md:px-16">
-      <Logo size="nav" />
-      <div className="flex items-center gap-8">
-        {LINKS.map((link) => (
+    <div className="sticky top-0 z-50 bg-green-800">
+      <div className="flex items-center justify-between px-8 py-5 md:px-16">
+        <Logo size="nav" />
+
+        <div className="hidden items-center gap-8 sm:flex">
+          {LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-sm font-semibold text-white/75 hover:text-white"
+            >
+              {link.label}
+            </a>
+          ))}
           <a
-            key={link.href}
-            href={link.href}
-            className="hidden text-sm font-semibold text-white/75 hover:text-white sm:inline"
+            href="#contato"
+            className="rounded-full bg-gold px-[22px] py-2.5 text-[13px] font-bold text-green-800 hover:text-green-800 hover:brightness-95"
           >
-            {link.label}
+            Falar com Marco
           </a>
-        ))}
-        <a
-          href="#contato"
-          className="rounded-full bg-gold px-[22px] py-2.5 text-[13px] font-bold text-green-800 hover:text-green-800 hover:brightness-95"
+        </div>
+
+        <button
+          onClick={() => setOpen(!open)}
+          aria-label={open ? "Fechar menu" : "Abrir menu"}
+          className="cursor-pointer text-2xl leading-none text-white sm:hidden"
         >
-          Falar com Marco
-        </a>
+          {open ? "✕" : "☰"}
+        </button>
       </div>
+
+      {open && (
+        <div className="flex flex-col gap-1 border-t border-white/10 px-8 pt-2 pb-5 sm:hidden">
+          {LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="py-2.5 text-sm font-semibold text-white/75 hover:text-white"
+            >
+              {link.label}
+            </a>
+          ))}
+          <a
+            href="#contato"
+            onClick={() => setOpen(false)}
+            className="mt-2 rounded-full bg-gold px-[22px] py-2.5 text-center text-[13px] font-bold text-green-800"
+          >
+            Falar com Marco
+          </a>
+        </div>
+      )}
     </div>
   );
 }

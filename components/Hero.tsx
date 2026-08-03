@@ -2,7 +2,7 @@ import MarketIllustration from "./MarketIllustration";
 
 export default function Hero() {
   return (
-    <section className="grid grid-cols-1 items-center gap-16 bg-green-800 px-8 pt-24 pb-30 md:px-16 lg:grid-cols-2">
+    <section className="grid min-h-dvh grid-cols-1 items-center gap-10 bg-green-800 px-8 py-16 md:px-16 lg:grid-cols-2 lg:gap-16">
       <div>
         <div className="mb-7 inline-block rounded-full border border-gold/50 px-[18px] py-2 text-xs font-bold tracking-[1px] text-gold">
           CONSULTORIA &amp; EDUCAÇÃO FINANCEIRA
@@ -15,10 +15,10 @@ export default function Hero() {
           quem viveu o mercado financeiro por dentro — sem conflito de
           interesses e com total transparência sobre custos e remuneração.
         </p>
-        <div className="flex flex-wrap items-center gap-5">
+        <div className="flex flex-nowrap items-center gap-2 sm:gap-5">
           <a
             href="#contato"
-            className="inline-block rounded-lg bg-gold px-[30px] py-4 text-[15px] font-bold text-green-800 hover:text-green-800 hover:brightness-95"
+            className="inline-block rounded-lg bg-gold px-3 py-2.5 text-[11px] font-bold whitespace-nowrap text-green-800 hover:text-green-800 hover:brightness-95 sm:px-[30px] sm:py-4 sm:text-[15px]"
           >
             Quero simplificar meus investimentos
           </a>
@@ -26,13 +26,13 @@ export default function Hero() {
             href="https://wa.me/5551999999999"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[15px] font-semibold text-white hover:text-white/80"
+            className="text-[11px] font-semibold whitespace-nowrap text-white hover:text-white/80 sm:text-[15px]"
           >
             Falar no WhatsApp →
           </a>
         </div>
       </div>
-      <div className="relative">
+      <div className="relative order-first mx-auto w-1/2 lg:order-none lg:w-full">
         <div className="absolute -top-6 -right-6 h-full w-full rounded-2xl border-2 border-gold/40" />
         <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl">
           <MarketIllustration />

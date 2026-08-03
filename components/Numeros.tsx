@@ -17,8 +17,8 @@ export default function Numeros() {
       </div>
       <div className="mx-auto grid max-w-[820px] grid-cols-1 gap-8 sm:grid-cols-3">
         {STATS.map((stat) => (
-          <div key={stat.lbl}>
-            <div className="mb-5 h-[3px] w-7 bg-gold" />
+          <div key={stat.lbl} className="text-center sm:text-left">
+            <div className="mx-auto mb-5 h-[3px] w-7 bg-gold sm:mx-0" />
             <div className="mb-2.5 font-display text-[38px] font-black text-white">
               {stat.val}
             </div>
