@@ -1,3 +1,6 @@
+import CtaTrace from "./CtaTrace";
+import { WHATSAPP_HREF, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
+
 const PATRIMONIO_OPTIONS = [
   "Até R$ 100 mil",
   "R$ 100 mil a R$ 300 mil",
@@ -36,12 +39,12 @@ export default function Contato() {
             em até 1 dia útil.
           </p>
           <a
-            href="https://wa.me/5551999999999"
+            href={WHATSAPP_HREF}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2.5 rounded-lg border border-white/15 bg-white/6 px-6 py-3.5 text-[15px] font-semibold text-white hover:text-white/80"
           >
-            WhatsApp: (51) 99999-9999 →
+            WhatsApp: {WHATSAPP_DISPLAY} →
           </a>
         </div>
         <form className="rounded-2xl bg-cream p-9 text-green-700">
@@ -107,9 +110,10 @@ export default function Contato() {
           </div>
           <button
             type="submit"
-            className="mt-2 w-full cursor-pointer rounded-lg bg-green-800 py-4 text-[15px] font-bold text-white"
+            className="cta-trace relative mt-2 w-full cursor-pointer rounded-lg bg-green-800 py-4 text-[15px] font-bold text-white"
           >
             Quero agendar uma conversa
+            <CtaTrace color="#c9982e" />
           </button>
         </form>
       </div>

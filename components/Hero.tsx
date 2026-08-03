@@ -1,4 +1,6 @@
 import MarketIllustration from "./MarketIllustration";
+import CtaTrace from "./CtaTrace";
+import { WHATSAPP_HREF } from "@/lib/whatsapp";
 
 export default function Hero() {
   return (
@@ -18,12 +20,13 @@ export default function Hero() {
         <div className="flex flex-nowrap items-center gap-2 sm:gap-5">
           <a
             href="#contato"
-            className="inline-block rounded-lg bg-gold px-3 py-2.5 text-[11px] font-bold whitespace-nowrap text-green-800 hover:text-green-800 hover:brightness-95 sm:px-[30px] sm:py-4 sm:text-[15px]"
+            className="cta-trace relative inline-block rounded-lg bg-gold px-3 py-2.5 text-[11px] font-bold whitespace-nowrap text-green-800 hover:text-green-800 hover:brightness-95 sm:px-[30px] sm:py-4 sm:text-[15px]"
           >
             Quero simplificar meus investimentos
+            <CtaTrace color="#f7f3ea" />
           </a>
           <a
-            href="https://wa.me/5551999999999"
+            href={WHATSAPP_HREF}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[11px] font-semibold whitespace-nowrap text-white hover:text-white/80 sm:text-[15px]"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import CtaTrace from "./CtaTrace";
 
 const PLANS = [
   {
@@ -207,13 +208,14 @@ export default function PlanosEModal() {
                   className="mt-auto w-full cursor-pointer bg-transparent pt-4 text-center"
                 >
                   <div
-                    className={`rounded-lg px-3.5 py-3.5 text-sm font-bold ${
+                    className={`cta-trace relative rounded-lg px-3.5 py-3.5 text-sm font-bold ${
                       dark
                         ? "bg-gold text-green-800"
                         : "bg-green-700/6 text-green-700"
                     }`}
                   >
                     Me interesso por esse plano
+                    <CtaTrace color={dark ? "#f7f3ea" : "#c9982e"} />
                   </div>
                 </button>
               </div>

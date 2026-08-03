@@ -57,11 +57,16 @@ export default function Faq() {
                 {item.q}
                 <span className="shrink-0 text-xl text-gold">{open ? "−" : "+"}</span>
               </button>
-              {open && (
-                <div className="px-[26px] pb-[22px] text-sm leading-[1.65] text-green-700/65">
-                  {item.a}
+              <div
+                className="grid transition-[grid-template-rows] duration-300 ease-in-out"
+                style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+              >
+                <div className="overflow-hidden">
+                  <div className="px-[26px] pb-[22px] text-sm leading-[1.65] text-green-700/65">
+                    {item.a}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           );
         })}

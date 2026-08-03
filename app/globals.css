@@ -110,4 +110,24 @@
       glow-in 0.6s 1.9s ease-out forwards,
       glow-breathe 2.4s 2.5s ease-in-out infinite;
   }
+
+  .cta-trace-rect {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.6s ease;
+  }
+
+  .cta-trace:hover .cta-trace-rect {
+    stroke-dashoffset: 0;
+  }
+
+  .steps-line {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 1.4s ease-out;
+  }
+
+  .steps-line.in-view {
+    transform: scaleY(1);
+  }
 }

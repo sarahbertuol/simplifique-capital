@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Logo from "./Logo";
+import CtaTrace from "./CtaTrace";
+import { WHATSAPP_HREF } from "@/lib/whatsapp";
 
 const LINKS = [
   { href: "#programa", label: "Programa" },
@@ -28,10 +30,13 @@ export default function Nav() {
             </a>
           ))}
           <a
-            href="#contato"
-            className="rounded-full bg-gold px-[22px] py-2.5 text-[13px] font-bold text-green-800 hover:text-green-800 hover:brightness-95"
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cta-trace relative rounded-full bg-gold px-[22px] py-2.5 text-[13px] font-bold text-green-800 hover:text-green-800 hover:brightness-95"
           >
             Falar com Marco
+            <CtaTrace pill color="#f7f3ea" />
           </a>
         </div>
 
@@ -57,7 +62,9 @@ export default function Nav() {
             </a>
           ))}
           <a
-            href="#contato"
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setOpen(false)}
             className="mt-2 rounded-full bg-gold px-[22px] py-2.5 text-center text-[13px] font-bold text-green-800"
           >

@@ -1,19 +1,10 @@
-import Image from "next/image";
+import SobreImage from "./SobreImage";
 
 export default function Sobre() {
   return (
     <section id="sobre" className="px-8 py-24 md:px-16 lg:py-30">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-16 lg:grid-cols-2">
-        <div className="relative order-last lg:order-none">
-          <div className="absolute top-5 left-5 h-full w-full rounded-2xl border-2 border-gold/35" />
-          <Image
-            src="/marco-kayser.png"
-            alt="Marco Kayser"
-            width={800}
-            height={1000}
-            className="relative block aspect-4/5 w-full rounded-2xl object-cover"
-          />
-        </div>
+        <SobreImage />
         <div>
           <div className="mb-7 inline-block rounded-full border border-gold-dark/50 px-[18px] py-2 text-xs font-bold tracking-[1px] text-gold-dark">
             QUEM SOU EU
