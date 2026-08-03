@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const CHECKLIST = [
   "Total independência",
   "Especialista em ETFs",
@@ -9,9 +11,13 @@ export default function Filosofia() {
   return (
     <section className="bg-tan px-8 py-24 md:px-16 lg:py-30">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 lg:grid-cols-2">
-        <div className="placeholder-img flex aspect-square items-center justify-center rounded-2xl">
-          <span className="placeholder-label">gráfico / diagrama de carteira</span>
-        </div>
+        <Image
+          src="/portfolio-dashboard.jpeg"
+          alt="Diagrama de alocação de carteira"
+          width={1024}
+          height={1024}
+          className="aspect-square w-full rounded-2xl object-cover"
+        />
         <div>
           <div className="mb-4 text-[13px] font-bold tracking-[1.5px] text-gold-dark">
             MINHA FILOSOFIA

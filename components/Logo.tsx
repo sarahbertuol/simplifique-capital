@@ -13,7 +13,7 @@ export default function Logo({ size = "nav" }: { size?: keyof typeof SIZES }) {
         <div className="w-[5px] bg-white/75" style={{ height: bars[1] }} />
         <div className="w-[5px] bg-gold" style={{ height: bars[2] }} />
       </div>
-      <div className={`font-display font-bold tracking-[-0.3px] text-white ${text}`}>
+      <div className={`font-display leading-none font-bold tracking-[-0.3px] text-white ${text}`}>
         simplifique <span className="text-gold">capital</span>
       </div>
     </div>
