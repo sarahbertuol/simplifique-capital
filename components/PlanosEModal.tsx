@@ -19,7 +19,7 @@ const PLANS = [
   {
     variant: "dark" as const,
     tag: "OPÇÃO 2 · MAIS COMPLETO",
-    title: "Educação Financeira + Flat Fee",
+    title: "Flat Fee",
     sub: "Acompanhamento contínuo",
     items: [
       "Tudo da Educação Financeira de 3 meses",
@@ -27,6 +27,19 @@ const PLANS = [
       "Suporte contínuo via WhatsApp",
       "Reunião semestral de acompanhamento",
       "Valor fixo, independente do patrimônio",
+    ],
+  },
+  {
+    variant: "light" as const,
+    tag: "OPÇÃO 3 · SOB DEMANDA",
+    title: "Consultoria Pontual",
+    sub: "Cobrança por hora, sem pacote fixo",
+    items: [
+      "Sessão avulsa, sem compromisso de continuidade",
+      "Cobrança apenas pelas horas utilizadas",
+      "Segunda opinião sobre uma decisão específica",
+      "Ideal para quem já fez o Programa e quer suporte extra",
+      "Também para quem só precisa de uma orientação pontual",
     ],
   },
 ];
@@ -131,11 +144,11 @@ export default function PlanosEModal() {
             Programa de Educação Financeira
           </h2>
           <p className="text-base leading-[1.6] text-green-700/65">
-            Você aprende a montar e administrar a própria carteira, com
-            orientação de quem viveu o mercado financeiro por dentro.
+            Três formas de acompanhamento — escolha a que faz mais sentido
+            para o seu momento.
           </p>
         </div>
-        <div className="mx-auto grid max-w-[1000px] grid-cols-1 gap-7 sm:grid-cols-2">
+        <div className="mx-auto grid max-w-[1160px] grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {PLANS.map((p) => {
             const dark = p.variant === "dark";
             return (
