@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import CtaTrace from "./CtaTrace";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 const PLANS = [
   {
@@ -111,6 +112,8 @@ export default function PlanosEModal() {
   const [objetivo, setObjetivo] = useState<string | null>(null);
   const [patrimonio, setPatrimonio] = useState<string | null>(null);
   const [nivel, setNivel] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(false);
 
   function openModal(planTitle: string) {
     setPlan(planTitle);
@@ -122,6 +125,7 @@ export default function PlanosEModal() {
     setPatrimonio(null);
     setNivel(null);
     setSubmitted(false);
+    setSendError(false);
     setStep(1);
     setOpen(true);
   }
@@ -136,12 +140,34 @@ export default function PlanosEModal() {
     setStep(n);
   }
 
-  function submit() {
+  async function submit() {
     if (!whats.trim()) {
       goStep(1);
       return;
     }
-    setSubmitted(true);
+    setSending(true);
+    setSendError(false);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formName: plan,
+          nome: name,
+          email,
+          whatsapp: whats,
+          objetivo,
+          patrimonio,
+          nivel,
+        }),
+      });
+      if (!res.ok) throw new Error("send failed");
+      setSubmitted(true);
+    } catch {
+      setSendError(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -395,18 +421,26 @@ export default function PlanosEModal() {
                         />
                       ))}
                     </div>
+                    {sendError && (
+                      <div className="mt-3 text-xs text-[#b0402f]">
+                        Não foi possível enviar. Tente novamente ou fale
+                        direto pelo WhatsApp.
+                      </div>
+                    )}
                     <div className="mt-6 flex gap-3">
                       <button
                         onClick={() => goStep(3)}
-                        className="flex-1 cursor-pointer rounded-lg bg-green-700/6 py-[15px] text-[15px] font-bold text-green-700"
+                        disabled={sending}
+                        className="flex-1 cursor-pointer rounded-lg bg-green-700/6 py-[15px] text-[15px] font-bold text-green-700 disabled:opacity-50"
                       >
                         Voltar
                       </button>
                       <button
                         onClick={submit}
-                        className="flex-[2] cursor-pointer rounded-lg bg-green-800 py-[15px] text-[15px] font-bold text-white"
+                        disabled={sending}
+                        className="flex-[2] cursor-pointer rounded-lg bg-green-800 py-[15px] text-[15px] font-bold text-white disabled:opacity-60"
                       >
-                        Enviar
+                        {sending ? "Enviando..." : "Enviar"}
                       </button>
                     </div>
                   </div>
@@ -419,7 +453,12 @@ export default function PlanosEModal() {
                 </h4>
                 <p className="text-[15px] leading-[1.6] text-green-700/65">
                   Entraremos em contato em até 24h com valores e detalhes do
-                  plano <strong>{plan}</strong>.
+                  plano <strong>{plan}</strong>. Se preferir, você também
+                  pode nos escrever em{" "}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold">
+                    {CONTACT_EMAIL}
+                  </a>
+                  .
                 </p>
               </div>
             )}
