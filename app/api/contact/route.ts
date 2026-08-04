@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
 const CONTACT_EMAIL = "contato@simplifiquecapital.com.br";
 
@@ -27,9 +27,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("RESEND_API_KEY não configurada");
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
+  if (!gmailUser || !gmailPass) {
+    console.error("GMAIL_USER / GMAIL_APP_PASSWORD não configuradas");
     return NextResponse.json(
       { ok: false, error: "Serviço de e-mail não configurado" },
       { status: 500 }
@@ -54,19 +55,18 @@ export async function POST(request: Request) {
   `;
 
   try {
-    const resend = new Resend(apiKey);
-    const { error } = await resend.emails.send({
-      from: "Simplifique Capital <onboarding@resend.dev>",
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: gmailUser, pass: gmailPass },
+    });
+
+    await transporter.sendMail({
+      from: `"Site Simplifique Capital" <${CONTACT_EMAIL}>`,
       to: CONTACT_EMAIL,
       replyTo: fields.email && fields.email.trim() ? fields.email : undefined,
       subject: formName,
       html,
     });
-
-    if (error) {
-      console.error("Resend error:", error);
-      return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
-    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {
