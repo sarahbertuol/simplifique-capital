@@ -26,7 +26,7 @@ export default function Programa() {
           alt="Etapas do Programa de Educação Financeira"
           width={768}
           height={1376}
-          className="aspect-[768/1376] w-full max-w-[220px] mx-auto justify-self-center rounded-2xl object-cover lg:max-w-[420px]"
+          className="hidden aspect-[768/1376] w-full max-w-[220px] mx-auto justify-self-center rounded-2xl object-cover lg:block lg:max-w-[420px]"
         />
       </div>
     </section>

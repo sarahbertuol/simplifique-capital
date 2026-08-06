@@ -13,13 +13,13 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0f2e28",
+          background: "#ffffff",
           borderRadius: 6,
         }}
       >
         <div style={{ display: "flex", alignItems: "flex-end", gap: 2 }}>
-          <div style={{ width: 4, height: 11, background: "rgba(255,255,255,0.45)" }} />
-          <div style={{ width: 4, height: 17, background: "rgba(255,255,255,0.75)" }} />
+          <div style={{ width: 4, height: 11, background: "#9aa8a3" }} />
+          <div style={{ width: 4, height: 17, background: "#4f615d" }} />
           <div style={{ width: 4, height: 23, background: "#c9982e" }} />
         </div>
       </div>

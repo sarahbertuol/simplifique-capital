@@ -17,7 +17,7 @@ export default function Hero() {
           quem viveu o mercado financeiro por dentro — sem conflito de
           interesses e com total transparência sobre custos e remuneração.
         </p>
-        <div className="flex flex-nowrap items-center gap-2 sm:gap-5">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
           <a
             href="#contato"
             className="cta-trace relative inline-block rounded-lg bg-gold px-3 py-2.5 text-[11px] font-bold whitespace-nowrap text-green-800 hover:text-green-800 hover:brightness-95 sm:px-[30px] sm:py-4 sm:text-[15px]"
