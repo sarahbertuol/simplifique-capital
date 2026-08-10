@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
+import Quote from "@/components/Quote";
 import Filosofia from "@/components/Filosofia";
 import Numeros from "@/components/Numeros";
 import Sobre from "@/components/Sobre";
@@ -14,6 +15,7 @@ export default function Home() {
     <>
       <Nav />
       <Hero />
+      <Quote />
       <Filosofia />
       <Numeros />
       <Sobre />
