@@ -7,11 +7,11 @@ export default function Quote() {
 
   return (
     <section className="bg-green-900 px-8 py-20 md:px-16">
-      <div ref={ref} className="mx-auto max-w-3xl text-center">
+      <div ref={ref} className="mx-auto max-w-5xl text-center">
         <div className="mb-4 font-display text-6xl leading-none font-black text-gold">
           &ldquo;
         </div>
-        <p className="mb-6 text-balance font-display text-[clamp(22px,3.4vw,34px)] leading-[1.35] font-bold text-white">
+        <p className="mb-6 text-balance font-display text-[clamp(20px,2.6vw,32px)] leading-[1.5] font-bold whitespace-normal text-white lg:whitespace-nowrap">
           Se você me{" "}
           <span
             className={`word-underline text-gold ${inView ? "in-view" : ""}`}
