@@ -8,31 +8,28 @@ export default function SobreImage() {
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    let ticking = false;
+    let raf: number;
+    let current = 0;
 
-    function update() {
-      ticking = false;
+    function loop() {
       const wrap = wrapRef.current;
       const img = imgRef.current;
-      if (!wrap || !img) return;
-      const rect = wrap.getBoundingClientRect();
-      const viewportCenter = window.innerHeight / 2;
-      const elementCenter = rect.top + rect.height / 2;
-      const rawOffset = (elementCenter - viewportCenter) * 0.08;
-      const offset = Math.max(-40, Math.min(40, rawOffset));
-      img.style.transform = `translateY(${offset}px)`;
-    }
-
-    function onScroll() {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
+      if (wrap && img) {
+        const rect = wrap.getBoundingClientRect();
+        const viewportCenter = window.innerHeight / 2;
+        const elementCenter = rect.top + rect.height / 2;
+        const rawTarget = (elementCenter - viewportCenter) * 0.08;
+        const target = Math.max(-40, Math.min(40, rawTarget));
+        // Ease toward the target instead of snapping to it, so the
+        // image visibly lags behind the scroll instead of tracking it 1:1.
+        current += (target - current) * 0.06;
+        img.style.transform = `translateY(${current.toFixed(2)}px)`;
       }
+      raf = requestAnimationFrame(loop);
     }
 
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
