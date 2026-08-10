@@ -177,7 +177,7 @@ export default function PlanosEModal() {
           <div className="mb-4 text-[13px] font-bold tracking-[1.5px] text-gold">
             ESCOPO E ENTREGAS
           </div>
-          <h2 className="mb-[18px] font-display text-[clamp(26px,3.4vw,38px)] font-extrabold text-green-700">
+          <h2 className="mb-[18px] text-balance font-display text-[clamp(26px,3.4vw,38px)] font-extrabold text-green-700">
             Programa de Educação Financeira
           </h2>
           <p className="text-base leading-[1.6] text-green-700/65">

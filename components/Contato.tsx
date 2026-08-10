@@ -72,7 +72,7 @@ export default function Contato() {
           <div className="mb-4 text-[13px] font-bold tracking-[1.5px] text-gold">
             VAMOS COMEÇAR
           </div>
-          <h2 className="mb-5 max-w-[440px] font-display text-[clamp(26px,3.2vw,34px)] font-extrabold text-white">
+          <h2 className="mb-5 max-w-[440px] text-balance font-display text-[clamp(26px,3.2vw,34px)] font-extrabold text-white">
             Dê o primeiro passo para simplificar seus investimentos
           </h2>
           <p className="mb-8 max-w-[440px] text-base leading-[1.65] text-white/70">

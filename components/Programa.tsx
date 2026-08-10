@@ -9,7 +9,7 @@ export default function Programa() {
           <div className="mb-4 text-[13px] font-bold tracking-[1.5px] text-gold-dark">
             O PROGRAMA
           </div>
-          <h2 className="mb-5 max-w-[480px] font-display text-[clamp(26px,3.2vw,34px)] font-extrabold text-green-700">
+          <h2 className="mb-5 max-w-[480px] text-balance font-display text-[clamp(26px,3.2vw,34px)] font-extrabold text-green-700">
             O que é o Programa de Educação Financeira
           </h2>
           <p className="mb-9 max-w-[480px] text-base leading-[1.7] text-green-700/65">

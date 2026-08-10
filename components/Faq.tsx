@@ -38,7 +38,7 @@ export default function Faq() {
         <div className="mb-4 text-[13px] font-bold tracking-[1.5px] text-gold">
           FAQ
         </div>
-        <h2 className="font-display text-[clamp(26px,3.2vw,34px)] font-extrabold text-green-700">
+        <h2 className="text-balance font-display text-[clamp(26px,3.2vw,34px)] font-extrabold text-green-700">
           Dúvidas frequentes
         </h2>
       </div>

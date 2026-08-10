@@ -22,7 +22,7 @@ export default function Filosofia() {
           <div className="mb-4 text-[13px] font-bold tracking-[1.5px] text-gold-dark">
             MINHA FILOSOFIA
           </div>
-          <h2 className="mb-5 max-w-[480px] font-display text-[clamp(26px,3.2vw,34px)] font-extrabold text-green-700">
+          <h2 className="mb-5 max-w-[480px] text-balance font-display text-[clamp(26px,3.2vw,34px)] font-extrabold text-green-700">
             Transparência e dados acima de opiniões
           </h2>
           <p className="mb-8 max-w-[480px] text-base leading-[1.65] text-green-700/65">

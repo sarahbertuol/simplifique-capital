@@ -9,7 +9,7 @@ export default function Sobre() {
           <div className="mb-7 inline-block rounded-full border border-gold-dark/50 px-[18px] py-2 text-xs font-bold tracking-[1px] text-gold-dark">
             QUEM SOU EU
           </div>
-          <h2 className="mb-6 font-display text-[clamp(28px,3.5vw,36px)] font-extrabold text-green-700">
+          <h2 className="mb-6 text-balance font-display text-[clamp(28px,3.5vw,36px)] font-extrabold text-green-700">
             Sobre Marco Kayser
           </h2>
           <p className="mb-5 text-base leading-[1.7] text-green-700/70">

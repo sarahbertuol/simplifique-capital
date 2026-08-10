@@ -9,7 +9,7 @@ export default function Hero() {
         <div className="mb-7 inline-block rounded-full border border-gold/50 px-[18px] py-2 text-xs font-bold tracking-[1px] text-gold">
           CONSULTORIA &amp; EDUCAÇÃO FINANCEIRA
         </div>
-        <h1 className="mb-6 max-w-[620px] font-display text-[clamp(32px,4.5vw,52px)] leading-[1.15] font-extrabold text-white">
+        <h1 className="mb-6 max-w-[620px] text-balance font-display text-[clamp(32px,4.5vw,52px)] leading-[1.15] font-extrabold text-white">
           Seu patrimônio merece estratégia, não complicação.
         </h1>
         <p className="mb-10 max-w-[520px] text-[17px] leading-[1.65] text-white/75">

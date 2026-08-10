@@ -130,4 +130,26 @@
   .steps-line.in-view {
     transform: scaleY(1);
   }
+
+  .word-underline {
+    position: relative;
+  }
+
+  .word-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 3px;
+    background: var(--color-gold);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.8s 0.2s ease-out;
+  }
+
+  .word-underline.in-view::after {
+    transform: scaleX(1);
+  }
 }
