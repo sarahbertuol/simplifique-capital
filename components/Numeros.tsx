@@ -65,7 +65,9 @@ export default function Numeros() {
           MINHA EXPERIÊNCIA EM NÚMEROS
         </div>
         <h2 className="font-display text-[clamp(24px,3vw,32px)] font-extrabold text-white">
-          Uma trajetória sólida no mercado financeiro
+          Uma trajetória sólida
+          <br />
+          no mercado financeiro
         </h2>
       </div>
       <div
