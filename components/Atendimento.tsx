@@ -110,7 +110,7 @@ export default function Atendimento() {
           principais plataformas do mercado.
         </p>
       </div>
-      <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-12 gap-y-10">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-10 lg:flex-nowrap lg:gap-x-10">
         {LOGOS.map((Logo, i) => (
           <Logo key={i} />
         ))}
