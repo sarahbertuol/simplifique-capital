@@ -1,4 +1,4 @@
-import LinhaDoTempo from "@/components/cronograma/LinhaDoTempo";
+import LinhaDoTempo from "@/components/LinhaDoTempo";
 import { cronograma } from "@/lib/cronograma";
 
 export default function Page() {

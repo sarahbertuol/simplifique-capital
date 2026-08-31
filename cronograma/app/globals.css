@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/*
+ * Tokens da marca Simplifique Capital, extraídos do código-fonte do site
+ * (ver tokens.md na raiz do repositório). Mesmos valores, para que o
+ * cronograma e o site não divirjam de cor com o tempo.
+ */
+@theme inline {
+  --font-display: var(--font-poppins);
+  --font-sans: var(--font-inter);
+
+  --color-green-900: #0a2420;
+  --color-green-800: #0f2e28;
+  --color-green-700: #152420;
+  --color-gold: #c9982e;
+  --color-gold-dark: #a97c1f;
+  --color-cream: #f7f3ea;
+  --color-tan: #f0ebe0;
+}
+
+@layer base {
+  body {
+    margin: 0;
+    background: var(--color-cream);
+    font-family: var(--font-sans), sans-serif;
+    color: var(--color-green-700);
+  }
+}

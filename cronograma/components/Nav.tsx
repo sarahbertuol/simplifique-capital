@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
-  { href: "/cronograma", rotulo: "linha do tempo" },
-  { href: "/cronograma/grade", rotulo: "grade" },
+  { href: "/", rotulo: "linha do tempo" },
+  { href: "/grade", rotulo: "grade" },
 ] as const;
 
 export default function Nav() {
