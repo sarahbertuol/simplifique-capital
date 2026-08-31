@@ -100,9 +100,16 @@ export default function Detalhe({
 
         {post.formato === "Reels" && (
           <div className="mt-9 border-t border-green-700/15 px-6 pt-6 md:px-10">
-            <h3 className="font-display text-[19px] font-bold text-green-900">
-              Roteiro
-            </h3>
+            <div className="flex items-baseline gap-3">
+              <h3 className="font-display text-[19px] font-bold text-green-900">
+                Roteiro
+              </h3>
+              {post.duracao && (
+                <span className="font-sans text-[13px] text-green-700/70">
+                  {post.duracao}
+                </span>
+              )}
+            </div>
             <p className="mt-3 font-sans text-[15px] leading-[1.7] whitespace-pre-line text-green-700">
               {post.roteiro}
             </p>

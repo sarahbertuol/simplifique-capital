@@ -30,6 +30,20 @@ const CORES: Record<
     sutil: "rgb(247 243 234 / 0.55)",
     marca: "var(--color-gold)",
   },
+  // Os dois institucionais ficam no verde mais profundo, que só eles usam.
+  // Na grade isso é proposital: a abertura do perfil tem que destoar.
+  Abertura: {
+    fundo: "var(--color-green-900)",
+    texto: "var(--color-gold)",
+    sutil: "rgb(247 243 234 / 0.55)",
+    marca: "var(--color-cream)",
+  },
+  Apresentação: {
+    fundo: "var(--color-green-900)",
+    texto: "var(--color-cream)",
+    sutil: "rgb(247 243 234 / 0.55)",
+    marca: "var(--color-gold)",
+  },
 };
 
 /**

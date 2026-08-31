@@ -59,9 +59,17 @@ importa — o app ordena por data. O formato decide quais campos existem, e o
 TypeScript cobra: `slides` só existe em `Carrossel`, `roteiro` só em `Reels`.
 
 Campos comuns: `data` (ISO `AAAA-MM-DD`, e é o identificador do post),
-`pilar` (`Simplicidade`, `Transparência` ou `Estratégia`), `card` (o texto que
-vai na arte — é ele que a grade renderiza), `legenda` e `obs` (opcional, uma
-observação de produção, que nunca sai daqui).
+`pilar`, `card` (o texto que vai na arte — é ele que a grade renderiza),
+`legenda` e `obs` (opcional, uma observação de produção, que nunca sai daqui).
+
+Os pilares são `Simplicidade`, `Transparência` e `Estratégia`. Existem ainda
+`Abertura` e `Apresentação`, que não são pilares de conteúdo: são os dois posts
+institucionais de largada de setembro. Ficam na mesma lista para que nenhum post
+suma quando você filtra. Se criar um pilar novo, adicione em `PILARES` e dê a ele
+um par de cores em `components/cronograma/Ladrilho.tsx` — o TypeScript cobra.
+
+Um `Reels` aceita `duracao` opcional (ex.: `"50s"`), que aparece ao lado do
+roteiro no detalhe.
 
 ```ts
 {
