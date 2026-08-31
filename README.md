@@ -36,3 +36,52 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 This project is deployed at [simplifique-capital-site.vercel.app](https://simplifique-capital-site.vercel.app).
+
+---
+
+## Cronograma editorial
+
+Ferramenta interna de planejamento do Instagram, em `/cronograma`. Três telas:
+linha do tempo (`/cronograma`), grade de preview do feed (`/cronograma/grade`) e
+o detalhe de cada post, que abre em painel sobre qualquer uma das duas.
+
+Não tem banco. O que já foi publicado fica no `localStorage` do aparelho, na
+chave `simplifique-cronograma:publicados` — quer dizer: marcar no celular não
+aparece no computador, e limpar os dados do navegador zera as marcações.
+
+A rota é `noindex`, mas fica no mesmo domínio do site: quem souber o endereço
+abre. Não é lugar para coisa sigilosa.
+
+### Como adicionar um post novo
+
+Todo post mora em `data/posts.ts`, no array `posts`. A ordem no arquivo não
+importa — o app ordena por data. O formato decide quais campos existem, e o
+TypeScript cobra: `slides` só existe em `Carrossel`, `roteiro` só em `Reels`.
+
+Campos comuns: `data` (ISO `AAAA-MM-DD`, e é o identificador do post),
+`pilar` (`Simplicidade`, `Transparência` ou `Estratégia`), `card` (o texto que
+vai na arte — é ele que a grade renderiza), `legenda` e `obs` (opcional, uma
+observação de produção, que nunca sai daqui).
+
+```ts
+{
+  data: "2026-11-02",
+  formato: "Carrossel",
+  pilar: "Simplicidade",
+  card: "Título que aparece na capa",
+  slides: [
+    "Slide 1, a capa.",
+    "Slide 2.",
+  ],
+  legenda: "Primeiro parágrafo.\n\nSegundo parágrafo.",
+  obs: "Lembrete de produção.",
+},
+```
+
+Um `Card` não leva `slides` nem `roteiro`. Um `Reels` leva `roteiro: "..."` no
+lugar de `slides`.
+
+Duas coisas que quebram o texto sem dar erro: quebra de parágrafo é `\n\n`
+dentro da string (é o que o botão "Copiar legenda" entrega pronto para colar),
+e acento tem que ser digitado normal, sem escapar. Depois de mexer, vale rodar
+`npx tsc --noEmit` para conferir se os campos batem com o formato.
