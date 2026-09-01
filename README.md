@@ -39,14 +39,21 @@ This project is deployed at [simplifique-capital-site.vercel.app](https://simpli
 
 ## Formulários de contato
 
-Os dois formulários do site (seção "Vamos Começar" e o modal dos planos) enviam
-para `/api/contact`, que manda o e-mail para `contato@simplifiquecapital.com.br`
-com cópia para `marco@simplifiquecapital.com.br`.
+Os dois formulários do site (seção "Vamos Começar" e o modal dos planos) abrem o
+WhatsApp com as respostas já preenchidas — esse é o caminho principal e não
+depende de nenhuma configuração.
 
-### Variáveis de ambiente obrigatórias
+Em paralelo, cada envio é registrado em `/api/contact`. Se as variáveis abaixo
+estiverem configuradas, esse registro também vira um e-mail para
+`contato@simplifiquecapital.com.br` com cópia para
+`marco@simplifiquecapital.com.br`. Se não estiverem, o contato fica apenas no
+log da função, marcado com `[LEAD-NAO-ENVIADO]` — e o visitante não vê erro
+nenhum, porque o WhatsApp já resolveu o contato dele.
 
-Sem estas variáveis **nenhum e-mail é enviado** — o contato fica apenas
-registrado no log da função, marcado com `[LEAD-NAO-ENVIADO]`:
+### Variáveis de ambiente do e-mail (opcionais)
+
+Sem estas variáveis nenhum e-mail é enviado; o WhatsApp continua funcionando
+normalmente:
 
 | Variável | Descrição |
 | --- | --- |

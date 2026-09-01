@@ -46,6 +46,9 @@ export async function sendContactForm(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        // O visitante troca para o WhatsApp logo em seguida; keepalive garante
+        // que o registro chegue ao servidor mesmo com a aba em segundo plano.
+        keepalive: true,
       });
       if (res.ok) {
         const data = (await res.json().catch(() => ({}))) as {
