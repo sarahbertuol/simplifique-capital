@@ -2,8 +2,17 @@
 
 import { useState } from "react";
 import CtaTrace from "./CtaTrace";
-import { WHATSAPP_HREF, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
-import { CONTACT_EMAIL } from "@/lib/contact";
+import {
+  WHATSAPP_HREF,
+  WHATSAPP_DISPLAY,
+  whatsappFormHref,
+} from "@/lib/whatsapp";
+import {
+  CONTACT_EMAIL,
+  isValidEmail,
+  isValidPhone,
+  sendContactForm,
+} from "@/lib/contact";
 
 const PATRIMONIO_OPTIONS = [
   "Até R$ 100 mil",
@@ -37,33 +46,53 @@ export default function Contato() {
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [delivered, setDelivered] = useState(true);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  function validate() {
+    const next: Record<string, string> = {};
+    if (!name.trim()) next.nome = "Informe seu nome.";
+    if (!whats.trim()) next.whatsapp = "Informe seu WhatsApp.";
+    else if (!isValidPhone(whats))
+      next.whatsapp = "Informe um WhatsApp válido com DDD.";
+    if (!email.trim()) next.email = "Informe seu e-mail.";
+    else if (!isValidEmail(email)) next.email = "Informe um e-mail válido.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (sending) return;
+    if (!validate()) return;
     setSending(true);
     setSendError(false);
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formName: "Vamos Começar",
-          nome: name,
-          email,
-          whatsapp: whats,
-          servico,
-          patrimonio,
-          nivel,
-        }),
-      });
-      if (!res.ok) throw new Error("send failed");
+    const result = await sendContactForm({
+      formName: "Vamos Começar",
+      nome: name,
+      email,
+      whatsapp: whats,
+      servico,
+      patrimonio,
+      nivel,
+    });
+    setSending(false);
+    if (result.received) {
+      setDelivered(result.delivered);
       setSubmitted(true);
-    } catch {
+    } else {
       setSendError(true);
-    } finally {
-      setSending(false);
     }
   }
+
+  const whatsappHref = whatsappFormHref("Vamos Começar", [
+    ["Nome", name],
+    ["E-mail", email],
+    ["WhatsApp", whats],
+    ["Serviço de interesse", servico],
+    ["Patrimônio aproximado", patrimonio],
+    ["Nível de conhecimento", nivel],
+  ]);
 
   return (
     <section id="contato" className="bg-green-800 px-8 py-24 md:px-16 lg:py-30">
@@ -102,47 +131,76 @@ export default function Contato() {
               </a>
               .
             </p>
+            {!delivered && (
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 block rounded-lg bg-green-800 py-3.5 text-sm font-bold text-white"
+              >
+                Quer agilizar? Falar agora no WhatsApp
+              </a>
+            )}
           </div>
         ) : (
           <form
             onSubmit={handleSubmit}
+            noValidate
             className="rounded-2xl bg-cream p-9 text-green-700"
           >
             <div className="mb-[18px] flex flex-col gap-2">
               <label className="text-xs font-bold tracking-[0.3px] text-green-700">
-                NOME
+                NOME *
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Seu nome completo"
-                className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm"
+                aria-invalid={Boolean(errors.nome)}
+                className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
+                  errors.nome ? "border-[#b0402f]" : "border-green-700/15"
+                }`}
               />
+              {errors.nome && (
+                <div className="text-xs text-[#b0402f]">{errors.nome}</div>
+              )}
             </div>
             <div className="mb-[18px] flex flex-col gap-2">
               <label className="text-xs font-bold tracking-[0.3px] text-green-700">
-                E-MAIL
+                E-MAIL *
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="voce@email.com"
-                className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm"
+                aria-invalid={Boolean(errors.email)}
+                className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
+                  errors.email ? "border-[#b0402f]" : "border-green-700/15"
+                }`}
               />
+              {errors.email && (
+                <div className="text-xs text-[#b0402f]">{errors.email}</div>
+              )}
             </div>
             <div className="mb-[18px] flex flex-col gap-2">
               <label className="text-xs font-bold tracking-[0.3px] text-green-700">
-                WHATSAPP
+                WHATSAPP *
               </label>
               <input
                 type="tel"
                 value={whats}
                 onChange={(e) => setWhats(e.target.value)}
                 placeholder="(00) 00000-0000"
-                className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm"
+                aria-invalid={Boolean(errors.whatsapp)}
+                className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
+                  errors.whatsapp ? "border-[#b0402f]" : "border-green-700/15"
+                }`}
               />
+              {errors.whatsapp && (
+                <div className="text-xs text-[#b0402f]">{errors.whatsapp}</div>
+              )}
             </div>
             <div className="mb-[18px] flex flex-col gap-2">
               <label className="text-xs font-bold tracking-[0.3px] text-green-700">
@@ -187,9 +245,20 @@ export default function Contato() {
               </select>
             </div>
             {sendError && (
-              <div className="mb-[18px] text-xs text-[#b0402f]">
-                Não foi possível enviar. Tente novamente ou fale direto pelo
-                WhatsApp.
+              <div className="mb-[18px] rounded-lg border border-[#b0402f]/25 bg-[#b0402f]/5 p-4">
+                <div className="mb-3 text-xs leading-[1.5] text-[#b0402f]">
+                  Não foi possível enviar seu formulário agora. Você pode
+                  tentar de novo ou mandar suas respostas pelo WhatsApp — elas
+                  já vão preenchidas na mensagem.
+                </div>
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-lg bg-green-800 py-3 text-center text-sm font-bold text-white"
+                >
+                  Enviar respostas pelo WhatsApp
+                </a>
               </div>
             )}
             <button

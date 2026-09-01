@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import CtaTrace from "./CtaTrace";
-import { CONTACT_EMAIL } from "@/lib/contact";
+import {
+  CONTACT_EMAIL,
+  isValidEmail,
+  isValidPhone,
+  sendContactForm,
+} from "@/lib/contact";
+import { whatsappFormHref } from "@/lib/whatsapp";
 
 const PLANS = [
   {
@@ -105,10 +111,11 @@ export default function PlanosEModal() {
   const [plan, setPlan] = useState("");
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [delivered, setDelivered] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [whats, setWhats] = useState("");
-  const [whatsError, setWhatsError] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [objetivo, setObjetivo] = useState<string | null>(null);
   const [patrimonio, setPatrimonio] = useState<string | null>(null);
   const [nivel, setNivel] = useState<string | null>(null);
@@ -120,55 +127,98 @@ export default function PlanosEModal() {
     setName("");
     setEmail("");
     setWhats("");
-    setWhatsError(false);
+    setErrors({});
     setObjetivo(null);
     setPatrimonio(null);
     setNivel(null);
     setSubmitted(false);
+    setDelivered(true);
     setSendError(false);
     setStep(1);
     setOpen(true);
   }
 
+  /** Valida os dados de contato do passo 1. */
+  function validateContato() {
+    const next: Record<string, string> = {};
+    if (!name.trim()) next.nome = "Informe seu nome.";
+    if (!whats.trim()) next.whatsapp = "WhatsApp é obrigatório.";
+    else if (!isValidPhone(whats))
+      next.whatsapp = "Informe um WhatsApp válido com DDD.";
+    if (email.trim() && !isValidEmail(email))
+      next.email = "Informe um e-mail válido.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }
+
   function goStep(n: number) {
-    if (n > 1 && !whats.trim()) {
-      setWhatsError(true);
-      setStep(1);
-      return;
+    // Voltar nunca é bloqueado; avançar exige o passo atual preenchido.
+    if (n > step) {
+      if (!validateContato()) {
+        setStep(1);
+        return;
+      }
+      if (step === 2 && !objetivo) {
+        setErrors({ objetivo: "Escolha uma opção para continuar." });
+        return;
+      }
+      if (step === 3 && !patrimonio) {
+        setErrors({ patrimonio: "Escolha uma opção para continuar." });
+        return;
+      }
     }
-    setWhatsError(false);
+    setErrors({});
     setStep(n);
   }
 
   async function submit() {
-    if (!whats.trim()) {
-      goStep(1);
+    if (sending) return;
+    if (!validateContato()) {
+      setStep(1);
+      return;
+    }
+    if (!objetivo) {
+      setErrors({ objetivo: "Escolha uma opção para continuar." });
+      setStep(2);
+      return;
+    }
+    if (!patrimonio) {
+      setErrors({ patrimonio: "Escolha uma opção para continuar." });
+      setStep(3);
+      return;
+    }
+    if (!nivel) {
+      setErrors({ nivel: "Escolha uma opção para enviar." });
       return;
     }
     setSending(true);
     setSendError(false);
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formName: plan,
-          nome: name,
-          email,
-          whatsapp: whats,
-          objetivo,
-          patrimonio,
-          nivel,
-        }),
-      });
-      if (!res.ok) throw new Error("send failed");
+    const result = await sendContactForm({
+      formName: plan,
+      nome: name,
+      email,
+      whatsapp: whats,
+      objetivo,
+      patrimonio,
+      nivel,
+    });
+    setSending(false);
+    if (result.received) {
+      setDelivered(result.delivered);
       setSubmitted(true);
-    } catch {
+    } else {
       setSendError(true);
-    } finally {
-      setSending(false);
     }
   }
+
+  const whatsappHref = whatsappFormHref(plan, [
+    ["Nome", name],
+    ["E-mail", email],
+    ["WhatsApp", whats],
+    ["Objetivo", objetivo],
+    ["Patrimônio aproximado", patrimonio],
+    ["Nível de conhecimento", nivel],
+  ]);
 
   return (
     <>
@@ -292,15 +342,23 @@ export default function PlanosEModal() {
                     </p>
                     <div className="mb-[18px] flex flex-col gap-2">
                       <label className="text-xs font-bold tracking-[0.3px] text-green-700">
-                        NOME
+                        NOME *
                       </label>
                       <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Seu nome completo"
-                        className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm"
+                        aria-invalid={Boolean(errors.nome)}
+                        className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
+                          errors.nome ? "border-[#b0402f]" : "border-green-700/15"
+                        }`}
                       />
+                      {errors.nome && (
+                        <div className="text-xs text-[#b0402f]">
+                          {errors.nome}
+                        </div>
+                      )}
                     </div>
                     <div className="mb-[18px] flex flex-col gap-2">
                       <label className="text-xs font-bold tracking-[0.3px] text-green-700">
@@ -311,8 +369,18 @@ export default function PlanosEModal() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="voce@email.com"
-                        className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm"
+                        aria-invalid={Boolean(errors.email)}
+                        className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
+                          errors.email
+                            ? "border-[#b0402f]"
+                            : "border-green-700/15"
+                        }`}
                       />
+                      {errors.email && (
+                        <div className="text-xs text-[#b0402f]">
+                          {errors.email}
+                        </div>
+                      )}
                     </div>
                     <div className="mb-[18px] flex flex-col gap-2">
                       <label className="text-xs font-bold tracking-[0.3px] text-green-700">
@@ -323,11 +391,16 @@ export default function PlanosEModal() {
                         value={whats}
                         onChange={(e) => setWhats(e.target.value)}
                         placeholder="(00) 00000-0000"
-                        className="rounded-lg border border-green-700/15 bg-white px-4 py-[13px] text-sm"
+                        aria-invalid={Boolean(errors.whatsapp)}
+                        className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
+                          errors.whatsapp
+                            ? "border-[#b0402f]"
+                            : "border-green-700/15"
+                        }`}
                       />
-                      {whatsError && (
+                      {errors.whatsapp && (
                         <div className="mt-1.5 text-xs text-[#b0402f]">
-                          WhatsApp é obrigatório.
+                          {errors.whatsapp}
                         </div>
                       )}
                     </div>
@@ -355,6 +428,11 @@ export default function PlanosEModal() {
                         />
                       ))}
                     </div>
+                    {errors.objetivo && (
+                      <div className="mt-3 text-xs text-[#b0402f]">
+                        {errors.objetivo}
+                      </div>
+                    )}
                     <div className="mt-6 flex gap-3">
                       <button
                         onClick={() => goStep(1)}
@@ -388,6 +466,11 @@ export default function PlanosEModal() {
                         />
                       ))}
                     </div>
+                    {errors.patrimonio && (
+                      <div className="mt-3 text-xs text-[#b0402f]">
+                        {errors.patrimonio}
+                      </div>
+                    )}
                     <div className="mt-6 flex gap-3">
                       <button
                         onClick={() => goStep(2)}
@@ -421,10 +504,26 @@ export default function PlanosEModal() {
                         />
                       ))}
                     </div>
-                    {sendError && (
+                    {errors.nivel && (
                       <div className="mt-3 text-xs text-[#b0402f]">
-                        Não foi possível enviar. Tente novamente ou fale
-                        direto pelo WhatsApp.
+                        {errors.nivel}
+                      </div>
+                    )}
+                    {sendError && (
+                      <div className="mt-4 rounded-lg border border-[#b0402f]/25 bg-[#b0402f]/5 p-4">
+                        <div className="mb-3 text-xs leading-[1.5] text-[#b0402f]">
+                          Não foi possível enviar agora. Tente de novo ou mande
+                          suas respostas pelo WhatsApp — elas já vão
+                          preenchidas na mensagem.
+                        </div>
+                        <a
+                          href={whatsappHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block rounded-lg bg-green-800 py-3 text-center text-sm font-bold text-white"
+                        >
+                          Enviar respostas pelo WhatsApp
+                        </a>
                       </div>
                     )}
                     <div className="mt-6 flex gap-3">
@@ -460,6 +559,16 @@ export default function PlanosEModal() {
                   </a>
                   .
                 </p>
+                {!delivered && (
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 block rounded-lg bg-green-800 py-3.5 text-sm font-bold text-white"
+                  >
+                    Quer agilizar? Falar agora no WhatsApp
+                  </a>
+                )}
               </div>
             )}
           </div>

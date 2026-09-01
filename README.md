@@ -36,3 +36,35 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 This project is deployed at [simplifique-capital-site.vercel.app](https://simplifique-capital-site.vercel.app).
+
+## Formulários de contato
+
+Os dois formulários do site (seção "Vamos Começar" e o modal dos planos) enviam
+para `/api/contact`, que manda o e-mail para `contato@simplifiquecapital.com.br`
+com cópia para `marco@simplifiquecapital.com.br`.
+
+### Variáveis de ambiente obrigatórias
+
+Sem estas variáveis **nenhum e-mail é enviado** — o contato fica apenas
+registrado no log da função, marcado com `[LEAD-NAO-ENVIADO]`:
+
+| Variável | Descrição |
+| --- | --- |
+| `GMAIL_USER` | Conta que autentica no SMTP e assina o envio |
+| `GMAIL_APP_PASSWORD` | Senha de App do Google (não é a senha da conta) |
+
+A Senha de App é gerada em https://myaccount.google.com/apppasswords, com a
+verificação em duas etapas ativa na conta.
+
+Elas precisam estar cadastradas **no projeto da Vercel que serve o domínio**,
+no ambiente Production, seguidas de um redeploy — variável nova não vale para
+deploys já publicados.
+
+Para usar outro provedor de e-mail, basta definir `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_USER` e `SMTP_PASSWORD` no lugar das variáveis do Gmail.
+
+### Diagnóstico
+
+`GET /api/contact` mostra se as variáveis estão configuradas.
+`GET /api/contact?verify=1` testa a conexão e o login SMTP e explica o erro
+encontrado. Nenhum segredo é exposto.
