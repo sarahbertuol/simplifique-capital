@@ -1,70 +1,20 @@
 "use client";
 
 import type { Pilar, Post } from "@/data/posts";
+import Arte from "./Arte";
 
 /**
- * Cada pilar tem um par fundo/texto chapado, sempre o mesmo. É isso que faz a
- * sequência do feed ter ritmo de cor: dá para bater o olho e ver se três posts
- * escuros ficaram colados.
+ * Cores só dos rótulos sobrepostos ("Reels", "1/7") e das barras de estado.
+ * As cores da arte em si vivem em `lib/arte.ts` — aqui é só o que fica por
+ * cima do canvas e não entra no arquivo baixado.
  */
-const CORES: Record<
-  Pilar,
-  { fundo: string; texto: string; sutil: string; marca: string }
-> = {
-  Simplicidade: {
-    fundo: "var(--color-cream)",
-    texto: "var(--color-green-900)",
-    sutil: "rgb(10 36 32 / 0.72)",
-    marca: "var(--color-green-900)",
-  },
-  Transparência: {
-    fundo: "var(--color-gold)",
-    texto: "var(--color-green-900)",
-    sutil: "rgb(10 36 32 / 0.85)",
-    // O dourado do marcador sumiria no fundo dourado deste pilar.
-    marca: "var(--color-green-900)",
-  },
-  Estratégia: {
-    fundo: "var(--color-green-800)",
-    texto: "var(--color-cream)",
-    sutil: "rgb(247 243 234 / 0.55)",
-    marca: "var(--color-gold)",
-  },
-  // Os dois institucionais ficam no verde mais profundo, que só eles usam.
-  // Na grade isso é proposital: a abertura do perfil tem que destoar.
-  Abertura: {
-    fundo: "var(--color-green-900)",
-    texto: "var(--color-gold)",
-    sutil: "rgb(247 243 234 / 0.55)",
-    marca: "var(--color-cream)",
-  },
-  Apresentação: {
-    fundo: "var(--color-green-900)",
-    texto: "var(--color-cream)",
-    sutil: "rgb(247 243 234 / 0.55)",
-    marca: "var(--color-gold)",
-  },
-};
-
-/**
- * Tamanho da tipografia em `cqw` — percentual da largura do próprio ladrilho.
- * Assim o mesmo componente serve para a grade de 3 colunas no celular e para a
- * grade larga no desktop, sem breakpoint: texto curto ocupa o quadro inteiro,
- * texto longo encolhe o suficiente para caber.
- */
-function corpoDeTexto(texto: string): number {
-  const n = texto.length;
-  if (n <= 28) return 18;
-  if (n <= 48) return 14.5;
-  if (n <= 75) return 12;
-  return 10;
-}
-
-/** Onde o texto se ancora dentro do quadro, por formato. */
-const ANCORA: Record<Post["formato"], string> = {
-  Card: "justify-center",
-  Carrossel: "justify-start",
-  Reels: "justify-end",
+const SOBREPOSTO: Record<Pilar, { sutil: string; marca: string }> = {
+  Simplicidade: { sutil: "rgb(10 36 32 / 0.72)", marca: "bg-green-900" },
+  // O dourado do marcador sumiria no fundo dourado deste pilar.
+  Transparência: { sutil: "rgb(10 36 32 / 0.85)", marca: "bg-green-900" },
+  Estratégia: { sutil: "rgb(247 243 234 / 0.6)", marca: "bg-gold" },
+  Abertura: { sutil: "rgb(247 243 234 / 0.6)", marca: "bg-cream" },
+  Apresentação: { sutil: "rgb(247 243 234 / 0.6)", marca: "bg-gold" },
 };
 
 export default function Ladrilho({
@@ -78,54 +28,45 @@ export default function Ladrilho({
   hoje: boolean;
   onSelecionar: (post: Post) => void;
 }) {
-  const cores = CORES[post.pilar];
+  const sobreposto = SOBREPOSTO[post.pilar];
 
   return (
     <button
       type="button"
       onClick={() => onSelecionar(post)}
-      style={{ background: cores.fundo, color: cores.texto }}
-      className="group relative flex aspect-[4/5] w-full [container-type:inline-size] cursor-pointer flex-col overflow-hidden p-[6cqw] text-left focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-gold"
+      className="group relative block w-full [container-type:inline-size] cursor-pointer focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-gold"
       aria-label={`${post.card} — ${post.formato}, ${post.pilar}`}
     >
+      <Arte post={post} indice={0} />
+
+      {/* Rótulos de leitura da grade. Ficam por cima do canvas de propósito:
+          não são parte da arte e não vão para o arquivo baixado. */}
       {post.formato === "Reels" && (
-        <div
-          className="font-sans font-semibold"
-          style={{ fontSize: "6.5cqw", color: cores.sutil }}
+        <span
+          className="pointer-events-none absolute top-[6cqw] left-[7.5cqw] font-sans font-semibold"
+          style={{ fontSize: "5.5cqw", color: sobreposto.sutil }}
         >
           Reels
-        </div>
+        </span>
       )}
-
-      <div className={`flex min-h-0 flex-1 flex-col ${ANCORA[post.formato]}`}>
-        <p
-          className="font-display leading-[1.04] font-extrabold tracking-[-0.02em] text-balance"
-          style={{ fontSize: `${corpoDeTexto(post.card)}cqw` }}
-        >
-          {post.card}
-        </p>
-      </div>
-
       {post.formato === "Carrossel" && (
-        <div
-          className="font-sans font-semibold"
-          style={{ fontSize: "6.5cqw", color: cores.sutil }}
+        <span
+          className="pointer-events-none absolute right-[7.5cqw] bottom-[6cqw] font-sans font-semibold"
+          style={{ fontSize: "5.5cqw", color: sobreposto.sutil }}
         >
           1/{post.slides.length}
-        </div>
+        </span>
       )}
 
       {/* Barra em cima = é hoje. Barra embaixo = já publicado. */}
       {hoje && (
         <span
-          className="absolute inset-x-0 top-0 h-[1.8cqw]"
-          style={{ background: cores.marca }}
+          className={`pointer-events-none absolute inset-x-0 top-0 h-[1.8cqw] ${sobreposto.marca}`}
         />
       )}
       {publicado && (
         <span
-          className="absolute inset-x-0 bottom-0 h-[1.8cqw]"
-          style={{ background: cores.marca }}
+          className={`pointer-events-none absolute inset-x-0 bottom-0 h-[1.8cqw] ${sobreposto.marca}`}
         />
       )}
     </button>
