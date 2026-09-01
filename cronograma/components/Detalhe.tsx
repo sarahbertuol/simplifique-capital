@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import type { Post } from "@/data/posts";
 import { diaDoMes, diaDaSemana, nomeDoMes } from "@/lib/cronograma";
 import BotaoCopiar from "./BotaoCopiar";
+import BotaoBaixar from "./BotaoBaixar";
+import Arte from "./Arte";
 
 export default function Detalhe({
   post,
@@ -78,24 +80,42 @@ export default function Detalhe({
         </h2>
 
         {post.formato === "Carrossel" && (
-          <ol className="mt-9 flex flex-col">
-            {post.slides.map((slide, i) => (
-              <li
-                key={i}
-                className="flex gap-4 border-t border-green-700/15 px-6 py-5 md:px-10"
-              >
-                {/* Índice do slide em corpo pequeno de propósito: várias
-                    legendas já trazem a própria numeração ("1.", "2.") dentro
-                    do texto aprovado, e dois números do mesmo peso brigavam. */}
-                <span className="mt-[2px] flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[3px] bg-gold font-sans text-[12px] leading-none font-bold text-green-900 tabular-nums">
-                  {i + 1}
-                </span>
-                <p className="font-sans text-[16px] leading-[1.6] text-green-700">
-                  {slide}
-                </p>
-              </li>
-            ))}
-          </ol>
+          <div className="mt-8 border-t border-green-700/15 px-6 pt-7 md:px-10">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <h3 className="font-display text-[19px] font-bold text-green-900">
+                Slides
+              </h3>
+              <span className="font-sans text-[13px] text-green-700/70">
+                {`${post.slides.length} artes \u00b7 o logotipo entra no último`}
+              </span>
+            </div>
+            <ol className="mt-4 grid grid-cols-2 gap-3">
+              {post.slides.map((_, i) => (
+                <li key={i}>
+                  <Arte post={post} indice={i} className="border border-green-700/15" />
+                  <div className="mt-1.5 flex items-baseline justify-between gap-2">
+                    <span className="font-sans text-[13px] font-bold text-green-700/70 tabular-nums">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <BotaoBaixar post={post} indice={i} miudo>
+                      baixar
+                    </BotaoBaixar>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {post.formato !== "Carrossel" && (
+          <div className="mt-8 border-t border-green-700/15 px-6 pt-7 md:px-10">
+            <h3 className="font-display text-[19px] font-bold text-green-900">
+              {post.formato === "Reels" ? "Capa" : "Arte"}
+            </h3>
+            <div className="mt-4 max-w-[300px]">
+              <Arte post={post} indice={0} className="border border-green-700/15" />
+            </div>
+          </div>
         )}
 
         {post.formato === "Reels" && (
@@ -137,9 +157,10 @@ export default function Detalhe({
         )}
 
         <div className="mt-auto flex flex-wrap gap-3 px-6 pt-10 pb-8 md:px-10">
-          <BotaoCopiar texto={post.legenda} primario>
-            Copiar legenda
-          </BotaoCopiar>
+          <BotaoBaixar post={post} todas primario>
+            {post.formato === "Carrossel" ? "Baixar todas" : "Baixar arte"}
+          </BotaoBaixar>
+          <BotaoCopiar texto={post.legenda}>Copiar legenda</BotaoCopiar>
           {post.formato === "Carrossel" && (
             <BotaoCopiar
               texto={post.slides
