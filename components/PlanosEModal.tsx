@@ -111,6 +111,7 @@ export default function PlanosEModal() {
   const [plan, setPlan] = useState("");
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [delivered, setDelivered] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [whats, setWhats] = useState("");
@@ -131,6 +132,7 @@ export default function PlanosEModal() {
     setPatrimonio(null);
     setNivel(null);
     setSubmitted(false);
+    setDelivered(true);
     setSendError(false);
     setStep(1);
     setOpen(true);
@@ -191,7 +193,7 @@ export default function PlanosEModal() {
     }
     setSending(true);
     setSendError(false);
-    const ok = await sendContactForm({
+    const result = await sendContactForm({
       formName: plan,
       nome: name,
       email,
@@ -201,9 +203,22 @@ export default function PlanosEModal() {
       nivel,
     });
     setSending(false);
-    if (ok) setSubmitted(true);
-    else setSendError(true);
+    if (result.received) {
+      setDelivered(result.delivered);
+      setSubmitted(true);
+    } else {
+      setSendError(true);
+    }
   }
+
+  const whatsappHref = whatsappFormHref(plan, [
+    ["Nome", name],
+    ["E-mail", email],
+    ["WhatsApp", whats],
+    ["Objetivo", objetivo],
+    ["Patrimônio aproximado", patrimonio],
+    ["Nível de conhecimento", nivel],
+  ]);
 
   return (
     <>
@@ -502,14 +517,7 @@ export default function PlanosEModal() {
                           preenchidas na mensagem.
                         </div>
                         <a
-                          href={whatsappFormHref(plan, [
-                            ["Nome", name],
-                            ["E-mail", email],
-                            ["WhatsApp", whats],
-                            ["Objetivo", objetivo],
-                            ["Patrimônio aproximado", patrimonio],
-                            ["Nível de conhecimento", nivel],
-                          ])}
+                          href={whatsappHref}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block rounded-lg bg-green-800 py-3 text-center text-sm font-bold text-white"
@@ -551,6 +559,16 @@ export default function PlanosEModal() {
                   </a>
                   .
                 </p>
+                {!delivered && (
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 block rounded-lg bg-green-800 py-3.5 text-sm font-bold text-white"
+                  >
+                    Quer agilizar? Falar agora no WhatsApp
+                  </a>
+                )}
               </div>
             )}
           </div>

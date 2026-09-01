@@ -58,6 +58,16 @@ function normalize(fields: Record<string, unknown>) {
   return entries;
 }
 
+/**
+ * Registra o lead no log do servidor quando o e-mail não pôde ser entregue.
+ * Marcador fixo para facilitar a busca no painel de logs da Vercel.
+ */
+function logLead(text: string, motivo: string) {
+  console.error(
+    `[LEAD-NAO-ENVIADO] ${new Date().toISOString()} — ${motivo}\n${text}\n[/LEAD-NAO-ENVIADO]`
+  );
+}
+
 function maskAddress(address: string) {
   const [local, domain] = address.split("@");
   if (!domain) return "***";
@@ -160,14 +170,11 @@ export async function POST(request: Request) {
 
   const config = resolveMailerConfig();
   if ("reason" in config) {
-    // O lead não pode se perder por falta de configuração: fica no log.
-    console.error(
-      `[contato] e-mail não configurado (${config.missing.join(", ")}). Lead recebido:\n${text}`
-    );
-    return NextResponse.json(
-      { ok: false, error: "Serviço de e-mail não configurado", code: "ENOENV" },
-      { status: 500 }
-    );
+    // Sem credenciais não há como enviar, mas o lead não pode se perder nem
+    // virar erro na tela: fica registrado no log e o visitante segue para o
+    // WhatsApp. O diagnóstico em GET /api/contact continua mostrando a verdade.
+    logLead(text, `e-mail não configurado (${config.missing.join(", ")})`);
+    return NextResponse.json({ ok: true, delivered: false, code: "ENOENV" });
   }
 
   const rows = fields
@@ -199,17 +206,14 @@ export async function POST(request: Request) {
   });
 
   if (!result.ok) {
-    // Idem: registra o lead para que ele possa ser recuperado no log da Vercel.
-    console.error(
-      `[contato] falha no envio (${result.code}${
+    logLead(
+      text,
+      `falha no envio (${result.code}${
         result.responseCode ? ` / ${result.responseCode}` : ""
-      }): ${result.message}\nLead recebido:\n${text}`
+      }): ${result.message}`
     );
-    return NextResponse.json(
-      { ok: false, error: "Falha ao enviar e-mail", code: result.code },
-      { status: 502 }
-    );
+    return NextResponse.json({ ok: true, delivered: false, code: result.code });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, delivered: true });
 }

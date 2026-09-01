@@ -46,6 +46,7 @@ export default function Contato() {
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [delivered, setDelivered] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   function validate() {
@@ -66,7 +67,7 @@ export default function Contato() {
     if (!validate()) return;
     setSending(true);
     setSendError(false);
-    const ok = await sendContactForm({
+    const result = await sendContactForm({
       formName: "Vamos Começar",
       nome: name,
       email,
@@ -76,9 +77,22 @@ export default function Contato() {
       nivel,
     });
     setSending(false);
-    if (ok) setSubmitted(true);
-    else setSendError(true);
+    if (result.received) {
+      setDelivered(result.delivered);
+      setSubmitted(true);
+    } else {
+      setSendError(true);
+    }
   }
+
+  const whatsappHref = whatsappFormHref("Vamos Começar", [
+    ["Nome", name],
+    ["E-mail", email],
+    ["WhatsApp", whats],
+    ["Serviço de interesse", servico],
+    ["Patrimônio aproximado", patrimonio],
+    ["Nível de conhecimento", nivel],
+  ]);
 
   return (
     <section id="contato" className="bg-green-800 px-8 py-24 md:px-16 lg:py-30">
@@ -117,6 +131,16 @@ export default function Contato() {
               </a>
               .
             </p>
+            {!delivered && (
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 block rounded-lg bg-green-800 py-3.5 text-sm font-bold text-white"
+              >
+                Quer agilizar? Falar agora no WhatsApp
+              </a>
+            )}
           </div>
         ) : (
           <form
@@ -228,14 +252,7 @@ export default function Contato() {
                   já vão preenchidas na mensagem.
                 </div>
                 <a
-                  href={whatsappFormHref("Vamos Começar", [
-                    ["Nome", name],
-                    ["E-mail", email],
-                    ["WhatsApp", whats],
-                    ["Serviço de interesse", servico],
-                    ["Patrimônio aproximado", patrimonio],
-                    ["Nível de conhecimento", nivel],
-                  ])}
+                  href={whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block rounded-lg bg-green-800 py-3 text-center text-sm font-bold text-white"
