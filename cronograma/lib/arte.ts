@@ -151,10 +151,19 @@ function corpoAlvo(texto: string): number {
 }
 
 /**
- * O corpo alvo, encolhido só o necessário para caber.
+ * Teto de linhas por peça.
  *
- * Nunca cresce acima do alvo. O encolhimento existe porque o logotipo passou a
- * ocupar a base da arte, e slide longo de carrossel pode não caber mais.
+ * É isto que controla o tamanho na prática, mais do que o corpo alvo. Texto
+ * curto já cabe em duas ou três linhas no corpo máximo e passa reto; texto
+ * longo é o que encolhe, porque oito linhas empilhadas não se leem num feed.
+ */
+function maxLinhas(texto: string): number {
+  return texto.length <= 90 ? 3 : 4;
+}
+
+/**
+ * O corpo alvo, encolhido só o necessário para caber na caixa e no teto de
+ * linhas. Nunca cresce acima do alvo.
  */
 function ajustarCorpo(
   ctx: CanvasRenderingContext2D,
@@ -167,9 +176,11 @@ function ajustarCorpo(
   let corpo = alvo;
   let linhas: string[] = [];
 
-  // No máximo 24 reduções de 4%: cobre até ~60% do alvo, mais do que qualquer
-  // texto do cronograma precisa.
-  for (let i = 0; i < 24; i++) {
+  const teto = maxLinhas(texto);
+
+  // 40 reduções de 4% chegam a ~20% do alvo: sobra para o texto mais longo do
+  // cronograma caber no teto de linhas.
+  for (let i = 0; i < 40; i++) {
     ctx.font = `800 ${corpo}px ${familia}`;
     linhas = quebrarLinhas(ctx, texto, larguraCaixa);
 
@@ -181,7 +192,7 @@ function ajustarCorpo(
       (linha) => ctx.measureText(linha).width <= larguraCaixa,
     );
 
-    if (cabeAltura && cabeLargura) break;
+    if (cabeAltura && cabeLargura && linhas.length <= teto) break;
     corpo *= 0.96;
   }
   return { corpo, linhas };
