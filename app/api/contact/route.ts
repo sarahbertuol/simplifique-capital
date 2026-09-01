@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { CONTACT_CC_EMAIL, CONTACT_EMAIL } from "@/lib/contact";
+import { resolveMailerConfig, sendMail, verifyMailer } from "@/lib/mailer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -58,6 +58,70 @@ function normalize(fields: Record<string, unknown>) {
   return entries;
 }
 
+function maskAddress(address: string) {
+  const [local, domain] = address.split("@");
+  if (!domain) return "***";
+  return `${local.slice(0, 2)}***@${domain}`;
+}
+
+/**
+ * Diagnóstico do serviço de e-mail — abrir /api/contact no navegador mostra se
+ * as variáveis estão configuradas; /api/contact?verify=1 testa o login SMTP.
+ * Nenhum segredo é exposto: só nomes de variáveis, endereço mascarado e o
+ * código de erro do SMTP.
+ */
+export async function GET(request: Request) {
+  const config = resolveMailerConfig();
+
+  if ("reason" in config) {
+    return NextResponse.json(
+      {
+        ok: false,
+        problema: "Variáveis de ambiente de e-mail não configuradas",
+        faltando: config.missing,
+        comoResolver:
+          "Configure as variáveis no painel da Vercel (Settings → Environment Variables) para o ambiente Production e refaça o deploy.",
+      },
+      { status: 500 }
+    );
+  }
+
+  const base = {
+    ok: true,
+    remetente: maskAddress(config.user),
+    host: config.host,
+    destinatarios: [CONTACT_EMAIL, CONTACT_CC_EMAIL],
+  };
+
+  const url = new URL(request.url);
+  if (url.searchParams.get("verify") !== "1") {
+    return NextResponse.json({
+      ...base,
+      dica: "Adicione ?verify=1 à URL para testar a conexão e o login SMTP.",
+    });
+  }
+
+  const result = await verifyMailer(config);
+  if (result.ok) {
+    return NextResponse.json({ ...base, smtp: "ok", porta: result.port });
+  }
+
+  return NextResponse.json(
+    {
+      ...base,
+      ok: false,
+      smtp: "falhou",
+      codigo: result.code,
+      respostaSmtp: result.responseCode,
+      comoResolver:
+        result.code === "EAUTH"
+          ? "Login recusado pelo Gmail: gere uma Senha de App (myaccount.google.com/apppasswords) com verificação em duas etapas ativa e use-a em GMAIL_APP_PASSWORD."
+          : "O servidor não conseguiu conectar ao SMTP. Verifique host/porta ou use outro provedor via SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASSWORD.",
+    },
+    { status: 500 }
+  );
+}
+
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
   try {
@@ -86,18 +150,25 @@ export async function POST(request: Request) {
     );
   }
 
-  const gmailUser = process.env.GMAIL_USER;
-  const gmailPass = process.env.GMAIL_APP_PASSWORD;
-  if (!gmailUser || !gmailPass) {
-    console.error("GMAIL_USER / GMAIL_APP_PASSWORD não configuradas");
+  const title = formName.trim().slice(0, 120);
+  const leadEmail = fields.find(([key]) => key === "email")?.[1];
+  const text = [
+    `Novo contato — ${title}`,
+    "",
+    ...fields.map(([key, value]) => `${FIELD_LABELS[key] ?? key}: ${value}`),
+  ].join("\n");
+
+  const config = resolveMailerConfig();
+  if ("reason" in config) {
+    // O lead não pode se perder por falta de configuração: fica no log.
+    console.error(
+      `[contato] e-mail não configurado (${config.missing.join(", ")}). Lead recebido:\n${text}`
+    );
     return NextResponse.json(
-      { ok: false, error: "Serviço de e-mail não configurado" },
+      { ok: false, error: "Serviço de e-mail não configurado", code: "ENOENV" },
       { status: 500 }
     );
   }
-
-  const title = formName.trim().slice(0, 120);
-  const leadEmail = fields.find(([key]) => key === "email")?.[1];
 
   const rows = fields
     .map(
@@ -115,42 +186,30 @@ export async function POST(request: Request) {
     </div>
   `;
 
-  const text = [
-    `Novo contato — ${title}`,
-    "",
-    ...fields.map(([key, value]) => `${FIELD_LABELS[key] ?? key}: ${value}`),
-  ].join("\n");
+  const result = await sendMail(config, {
+    // O Gmail rejeita um remetente diferente da conta autenticada,
+    // por isso o From é sempre a própria conta que envia.
+    from: { name: "Site Simplifique Capital", address: config.user },
+    to: CONTACT_EMAIL,
+    cc: CONTACT_CC_EMAIL,
+    replyTo: leadEmail && EMAIL_RE.test(leadEmail) ? leadEmail : undefined,
+    subject: `Novo contato — ${title}`,
+    text,
+    html,
+  });
 
-  try {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: { user: gmailUser, pass: gmailPass },
-      // Falha rápido em vez de estourar o tempo da função serverless.
-      connectionTimeout: 10_000,
-      greetingTimeout: 10_000,
-      socketTimeout: 15_000,
-    });
-
-    await transporter.sendMail({
-      // O Gmail rejeita um remetente diferente da conta autenticada,
-      // por isso o From é sempre a própria conta que envia.
-      from: { name: "Site Simplifique Capital", address: gmailUser },
-      to: CONTACT_EMAIL,
-      cc: CONTACT_CC_EMAIL,
-      replyTo: leadEmail && EMAIL_RE.test(leadEmail) ? leadEmail : undefined,
-      subject: `Novo contato — ${title}`,
-      text,
-      html,
-    });
-
-    return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error("Contact form send failed:", err);
+  if (!result.ok) {
+    // Idem: registra o lead para que ele possa ser recuperado no log da Vercel.
+    console.error(
+      `[contato] falha no envio (${result.code}${
+        result.responseCode ? ` / ${result.responseCode}` : ""
+      }): ${result.message}\nLead recebido:\n${text}`
+    );
     return NextResponse.json(
-      { ok: false, error: "Falha ao enviar e-mail" },
-      { status: 500 }
+      { ok: false, error: "Falha ao enviar e-mail", code: result.code },
+      { status: 502 }
     );
   }
+
+  return NextResponse.json({ ok: true });
 }

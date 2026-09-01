@@ -8,7 +8,7 @@ import {
   isValidPhone,
   sendContactForm,
 } from "@/lib/contact";
-import { WHATSAPP_HREF } from "@/lib/whatsapp";
+import { whatsappFormHref } from "@/lib/whatsapp";
 
 const PLANS = [
   {
@@ -495,18 +495,27 @@ export default function PlanosEModal() {
                       </div>
                     )}
                     {sendError && (
-                      <div className="mt-3 text-xs leading-[1.5] text-[#b0402f]">
-                        Não foi possível enviar. Tente novamente ou fale
-                        direto pelo{" "}
+                      <div className="mt-4 rounded-lg border border-[#b0402f]/25 bg-[#b0402f]/5 p-4">
+                        <div className="mb-3 text-xs leading-[1.5] text-[#b0402f]">
+                          Não foi possível enviar agora. Tente de novo ou mande
+                          suas respostas pelo WhatsApp — elas já vão
+                          preenchidas na mensagem.
+                        </div>
                         <a
-                          href={WHATSAPP_HREF}
+                          href={whatsappFormHref(plan, [
+                            ["Nome", name],
+                            ["E-mail", email],
+                            ["WhatsApp", whats],
+                            ["Objetivo", objetivo],
+                            ["Patrimônio aproximado", patrimonio],
+                            ["Nível de conhecimento", nivel],
+                          ])}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-bold underline"
+                          className="block rounded-lg bg-green-800 py-3 text-center text-sm font-bold text-white"
                         >
-                          WhatsApp
+                          Enviar respostas pelo WhatsApp
                         </a>
-                        .
                       </div>
                     )}
                     <div className="mt-6 flex gap-3">

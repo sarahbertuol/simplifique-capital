@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import CtaTrace from "./CtaTrace";
-import { WHATSAPP_HREF, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
+import {
+  WHATSAPP_HREF,
+  WHATSAPP_DISPLAY,
+  whatsappFormHref,
+} from "@/lib/whatsapp";
 import {
   CONTACT_EMAIL,
   isValidEmail,
@@ -217,17 +221,27 @@ export default function Contato() {
               </select>
             </div>
             {sendError && (
-              <div className="mb-[18px] text-xs leading-[1.5] text-[#b0402f]">
-                Não foi possível enviar. Tente novamente ou fale direto pelo{" "}
+              <div className="mb-[18px] rounded-lg border border-[#b0402f]/25 bg-[#b0402f]/5 p-4">
+                <div className="mb-3 text-xs leading-[1.5] text-[#b0402f]">
+                  Não foi possível enviar seu formulário agora. Você pode
+                  tentar de novo ou mandar suas respostas pelo WhatsApp — elas
+                  já vão preenchidas na mensagem.
+                </div>
                 <a
-                  href={WHATSAPP_HREF}
+                  href={whatsappFormHref("Vamos Começar", [
+                    ["Nome", name],
+                    ["E-mail", email],
+                    ["WhatsApp", whats],
+                    ["Serviço de interesse", servico],
+                    ["Patrimônio aproximado", patrimonio],
+                    ["Nível de conhecimento", nivel],
+                  ])}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold underline"
+                  className="block rounded-lg bg-green-800 py-3 text-center text-sm font-bold text-white"
                 >
-                  WhatsApp
+                  Enviar respostas pelo WhatsApp
                 </a>
-                .
               </div>
             )}
             <button
