@@ -38,9 +38,24 @@ O que vira arte depende do formato. Em `Card` e `Reels`, a arte é o `card`. Em
 busca. Se você quer mudar o que aparece na capa de um carrossel, mexa no
 primeiro item de `slides`.
 
-O logotipo entra automaticamente: em toda peça de `Card` e `Reels`, e apenas no
-**último slide** de um carrossel. Não há campo para controlar isso — é regra, em
-`pecasDoPost()`.
+### Regras fixas da arte
+
+Estas não são campos, são regras no código. Não há como ligar ou desligar por
+post, e é de propósito: elas existem para o feed não virar uma colcha de
+retalhos.
+
+1. **O logotipo entra em toda peça**, inclusive em cada slide de carrossel.
+2. **O texto é sempre centralizado na altura e alinhado à esquerda.**
+3. **Nada de travessão.** Use dois pontos ou vírgula. Vale para o texto da arte
+   e para as legendas.
+4. **O primeiro card de cada post destaca um trecho em outra cor**, pelo campo
+   `destaque`. O trecho tem que aparecer literal no texto da primeira peça,
+   senão nada é pintado. O corte é por posição, não por palavra: destacar
+   `"má ideia"` não leva junto o ponto final colado nele.
+
+A cor do destaque muda por pilar, em `lib/arte.ts`. Sobre o fundo dourado do
+pilar Transparência ela vira creme, porque um destaque dourado sobre dourado
+não se veria.
 
 Os pilares são `Simplicidade`, `Transparência` e `Estratégia`. Existem ainda
 `Abertura` e `Apresentação`, que não são pilares de conteúdo: são os dois posts
