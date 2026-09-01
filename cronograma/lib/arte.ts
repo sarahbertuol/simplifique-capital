@@ -36,6 +36,7 @@ const GREEN_900 = "#0a2420";
 const GREEN_800 = "#0f2e28";
 const GOLD = "#c9982e";
 const GOLD_DARK = "#a97c1f";
+const WHITE = "#ffffff";
 
 export const PALETA: Record<Pilar, Paleta> = {
   Simplicidade: {
@@ -61,7 +62,7 @@ export const PALETA: Record<Pilar, Paleta> = {
     fundo: GREEN_800,
     texto: CREAM,
     destaque: GOLD,
-    logo: CREAM,
+    logo: WHITE,
     acento: GOLD,
     barras: ["rgba(255,255,255,0.45)", "rgba(255,255,255,0.75)"],
   },
@@ -69,7 +70,7 @@ export const PALETA: Record<Pilar, Paleta> = {
     fundo: GREEN_900,
     texto: GOLD,
     destaque: CREAM,
-    logo: CREAM,
+    logo: WHITE,
     acento: GOLD,
     barras: ["rgba(255,255,255,0.45)", "rgba(255,255,255,0.75)"],
   },
@@ -77,7 +78,7 @@ export const PALETA: Record<Pilar, Paleta> = {
     fundo: GREEN_900,
     texto: CREAM,
     destaque: GOLD,
-    logo: CREAM,
+    logo: WHITE,
     acento: GOLD,
     barras: ["rgba(255,255,255,0.45)", "rgba(255,255,255,0.75)"],
   },
@@ -94,6 +95,8 @@ export interface Peca {
   texto: string;
   /** Trecho a destacar em outra cor. Só o primeiro card de cada post tem. */
   destaque?: string;
+  /** Peça sem texto: só o logotipo, grande e centralizado. */
+  soLogo: boolean;
 }
 
 /** Todas as peças de um post, na ordem em que vão ao ar. */
@@ -105,9 +108,18 @@ export function pecasDoPost(post: Post): Peca[] {
       texto,
       // O destaque é só da capa: repetido em todo slide, deixa de destacar.
       destaque: i === 0 ? post.destaque : undefined,
+      soLogo: false,
     }));
   }
-  return [{ post, slide: null, texto: post.card, destaque: post.destaque }];
+  return [
+    {
+      post,
+      slide: null,
+      texto: post.card,
+      destaque: post.destaque,
+      soLogo: post.arte === "logo",
+    },
+  ];
 }
 
 export function nomeDoArquivo(peca: Peca): string {
@@ -291,36 +303,79 @@ function ajustarCorpo(
 }
 
 /** Desenha o logotipo, com a origem no canto inferior esquerdo do bloco. */
+/**
+ * Proporções do logotipo, relativas ao corpo do texto. São as do
+ * `components/Logo.tsx` do site, tamanho "footer": texto 16px, barras de 5px de
+ * largura com 3px de vão e alturas 7/12/16, 10px até a palavra e tracking de
+ * -0,3px. Mantidas iguais para o logotipo daqui não divergir do do site.
+ */
+const LOGO = {
+  larguraBarra: 5 / 16,
+  vaoBarra: 3 / 16,
+  alturas: [7 / 16, 12 / 16, 16 / 16],
+  vaoTexto: 10 / 16,
+  tracking: -0.3 / 16,
+};
+
+/** Prepara o contexto para medir e desenhar o logotipo no corpo dado. */
+function fonteDoLogo(
+  ctx: CanvasRenderingContext2D,
+  corpo: number,
+  familia: string,
+): void {
+  ctx.font = `700 ${corpo}px ${familia}`;
+  ctx.letterSpacing = `${LOGO.tracking * corpo}px`;
+}
+
+function larguraDoLogo(
+  ctx: CanvasRenderingContext2D,
+  corpo: number,
+  familia: string,
+): number {
+  fonteDoLogo(ctx, corpo, familia);
+  const barras =
+    3 * LOGO.larguraBarra * corpo + 2 * LOGO.vaoBarra * corpo + LOGO.vaoTexto * corpo;
+  return (
+    barras +
+    ctx.measureText("simplifique ").width +
+    ctx.measureText("capital").width
+  );
+}
+
+/** Desenha o logotipo com a base do conjunto em `baseY` e começando em `x`. */
 function desenharLogo(
   ctx: CanvasRenderingContext2D,
   paleta: Paleta,
   x: number,
   baseY: number,
-  largura: number,
+  corpo: number,
   familia: string,
 ): void {
-  const corpo = largura * 0.038;
-  const larguraBarra = corpo * 0.26;
-  const vao = corpo * 0.16;
-  const alturas = [corpo * 0.48, corpo * 0.75, corpo];
+  const larguraBarra = LOGO.larguraBarra * corpo;
+  const vao = LOGO.vaoBarra * corpo;
 
   let bx = x;
   const cores = [paleta.barras[0], paleta.barras[1], paleta.acento];
   for (let i = 0; i < 3; i++) {
     ctx.fillStyle = cores[i];
-    ctx.fillRect(bx, baseY - alturas[i], larguraBarra, alturas[i]);
+    const h = LOGO.alturas[i] * corpo;
+    ctx.fillRect(bx, baseY - h, larguraBarra, h);
     bx += larguraBarra + vao;
   }
 
-  const textoX = bx + corpo * 0.3;
-  ctx.font = `700 ${corpo}px ${familia}`;
+  const textoX = bx - vao + LOGO.vaoTexto * corpo;
+  fonteDoLogo(ctx, corpo, familia);
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = paleta.logo;
   ctx.fillText("simplifique ", textoX, baseY);
   const deslocamento = ctx.measureText("simplifique ").width;
   ctx.fillStyle = paleta.acento;
   ctx.fillText("capital", textoX + deslocamento, baseY);
+
+  // O espacejamento fica no contexto e contaminaria o texto da próxima peça.
+  ctx.letterSpacing = "0px";
 }
+
 
 /**
  * Desenha a peça inteira. `largura` em pixels de dispositivo; a altura sai da
@@ -340,6 +395,23 @@ export function desenharPeca(
   ctx.fillRect(0, 0, largura, altura);
 
   const margem = largura * 0.075;
+
+  if (peca.soLogo) {
+    // Logotipo ocupando 84% da largura, centralizado nos dois eixos.
+    const alvo = largura * 0.84;
+    let baixo = 4;
+    let alto = largura;
+    for (let i = 0; i < 40; i++) {
+      const meio = (baixo + alto) / 2;
+      if (larguraDoLogo(ctx, meio, familia) <= alvo) baixo = meio;
+      else alto = meio;
+    }
+    const corpo = baixo;
+    const x = (largura - larguraDoLogo(ctx, corpo, familia)) / 2;
+    desenharLogo(ctx, paleta, x, altura / 2 + corpo / 2, corpo, familia);
+    return;
+  }
+
   // O logotipo entra em toda peça, então o espaço dele é sempre reservado.
   const alturaLogo = largura * 0.038;
   const vaoLogo = largura * 0.055;
@@ -383,5 +455,5 @@ export function desenharPeca(
     }
   });
 
-  desenharLogo(ctx, paleta, margem, altura - margem, largura, familia);
+  desenharLogo(ctx, paleta, margem, altura - margem, alturaLogo, familia);
 }

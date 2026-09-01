@@ -39,6 +39,12 @@ interface PostBase {
    * no texto da primeira peça, senão nada é destacado.
    */
   destaque?: string;
+  /**
+   * `"logo"` faz a arte ser só o logotipo, grande e centralizado, sem texto.
+   * É a abertura do perfil. O campo `card` continua valendo como título na
+   * linha do tempo.
+   */
+  arte?: "logo";
   /** Observação de produção, só para mim. Nunca vai para o Instagram. */
   obs?: string;
 }
@@ -76,6 +82,7 @@ export const posts: Post[] = [
     formato: "Card",
     pilar: "Abertura",
     card: "Simplifique Capital",
+    arte: "logo",
     legenda:
       "Simplifique Capital.\n\nConsultoria e educação financeira, sem conflito de interesse. Aqui eu vou explicar, de forma simples, como montar e cuidar da própria carteira.\n\nSem produto empurrado, sem promessa de retorno.",
     obs: "Arte: fundo verde escuro, logo centralizado, nada mais. Sem frase, sem data, sem \"em breve\". O silêncio é o ponto: quem chegar pelo anúncio de quinta vê um perfil que já existe. Postar cedo, entre 8h e 9h. Atualizar a bio e o link no mesmo dia, antes deste post ir ao ar.",
