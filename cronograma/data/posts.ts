@@ -91,7 +91,7 @@ export const posts: Post[] = [
       "Mas tem um ponto central: controle.",
       "Seu filho passa a ter controle total do patrimônio aos 18 anos.\nSerá que ele terá maturidade suficiente para isso?",
       "Queremos acreditar que nosso filho terá educação suficiente para se controlar e seguirá nossos conselhos. Mas já tivemos essa idade e sabemos que nem sempre é assim.",
-      "Aos 18 anos a visão de mundo ainda está sendo construída e pode ser que o filho resvale em algumas ideias malucas, convencido por amigos socialistas no meio do caminho.",
+      "Aos 18 anos a visão de mundo ainda está sendo construída e pode ser que o filho tenha algumas ideias malucas, convencido por amigos socialistas no meio do caminho.",
       "Afinal, já diria o ditado popular:\nSe você não for socialista aos 18 anos, não tem coração; se continuar socialista depois dos 30, não tem cérebro.",
       "Minha sugestão: manter o patrimônio no nome do titular, pai ou mãe. Lá na frente, com mais maturidade, o titular decide com calma quanto e quando passar.",
       "A intenção de cuidar do futuro do filho continua a mesma. Só muda quem segura o volante até a hora certa.",
