@@ -106,8 +106,9 @@ export function pecasDoPost(post: Post): Peca[] {
       post,
       slide: i,
       texto,
-      // O destaque é só da capa: repetido em todo slide, deixa de destacar.
-      destaque: i === 0 ? post.destaque : undefined,
+      // A capa usa `destaque`; os demais slides só destacam quando a copy
+      // pedir, por `destaqueExtra`. Destaque em todo slide deixa de destacar.
+      destaque: i === 0 ? post.destaque : post.destaqueExtra?.[i],
       soLogo: false,
     }));
   }
@@ -289,6 +290,9 @@ function ajustarCorpo(
     linhas = quebrarLinhas(ctx, paragrafos, larguraCaixa);
 
     const cabeAltura = linhas.length * corpo * ENTRELINHA <= alturaCaixa;
+    // A linha em branco entre parágrafos ocupa altura, mas não é linha de
+    // leitura: contá-la no teto encolhia o texto sem motivo.
+    const comTexto = linhas.filter((l) => l.length > 0).length;
     // Uma palavra sozinha pode ser mais larga que a caixa — "aposentadoria,"
     // era o caso — e a quebra de linha não tem como resolver isso. Sem esta
     // conferência de largura ela vazava pela margem direita da arte.
@@ -296,7 +300,7 @@ function ajustarCorpo(
       (linha) => larguraDaLinha(ctx, linha) <= larguraCaixa,
     );
 
-    if (cabeAltura && cabeLargura && linhas.length <= teto) break;
+    if (cabeAltura && cabeLargura && comTexto <= teto) break;
     corpo *= 0.96;
   }
   return { corpo, linhas };

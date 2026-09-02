@@ -40,6 +40,12 @@ interface PostBase {
    */
   destaque?: string;
   /**
+   * Destaques em slides além da capa, por índice (base zero). A capa usa
+   * `destaque`; este campo é para quando a copy pede ênfase no meio do
+   * carrossel.
+   */
+  destaqueExtra?: Record<number, string>;
+  /**
    * `"logo"` faz a arte ser só o logotipo, grande e centralizado, sem texto.
    * É a abertura do perfil. O campo `card` continua valendo como título na
    * linha do tempo.
@@ -91,19 +97,20 @@ export const posts: Post[] = [
     data: "2026-09-03",
     formato: "Carrossel",
     pilar: "Estratégia",
-    card: "Conta de investimento para o filho menor de idade pode ser uma má ideia.",
+    card: "Conta de investimento para filho menor de idade, é uma boa ideia?",
     slides: [
-      "Conta de investimento para o filho menor de idade pode ser uma má ideia.\n\nTe digo o porquê.",
+      "Conta de investimento para filho menor de idade, é uma boa ideia?\n\nEu acho que não e te digo o porquê.",
       "A intenção é ótima. Começar cedo é o que mais funciona em investimento.",
       "Mas tem um ponto central: controle.",
       "Seu filho passa a ter controle total do patrimônio aos 18 anos.\nSerá que ele terá maturidade suficiente para isso?",
-      "Queremos acreditar que nosso filho terá educação suficiente para se controlar e seguirá nossos conselhos. Mas já tivemos essa idade e sabemos que nem sempre é assim.",
+      "Queremos acreditar que nosso filho terá educação para saber lidar com o dinheiro e seguirá nossos conselhos.\n\nMas já tivemos essa idade e sabemos que...",
       "Aos 18 anos a visão de mundo ainda está sendo construída e pode ser que o filho tenha algumas ideias malucas, convencido por amigos socialistas no meio do caminho.",
       "Afinal, já diria o ditado popular:\nSe você não for socialista aos 18 anos, não tem coração; se continuar socialista depois dos 30, não tem cérebro.",
       "Minha sugestão: manter o patrimônio no nome do titular, pai ou mãe. Lá na frente, com mais maturidade, o titular decide com calma quanto e quando passar.",
-      "A intenção de cuidar do futuro do filho continua a mesma. Só muda quem segura o volante até a hora certa.",
+      "A intenção de cuidar do futuro do filho continua a mesma. Só muda quem segura o controle até a hora certa.",
     ],
-    destaque: "má ideia",
+    destaque: "Eu acho que não",
+    destaqueExtra: { 4: "Mas já tivemos essa idade e sabemos que..." },
     legenda:
       "Eventualmente me deparo com pais querendo abrir uma conta de investimento no nome do filho menor de idade, para já ir formando um patrimônio. A intenção é ótima. Mas eu sempre desaconselho, e o motivo é um só: controle.\n\nAos 18 anos o controle passa a ser total e irrestrito. E por mais bem educado que seja o nosso filho, ninguém sabe em que momento de vida ele vai estar aos 18: que companhias terá, que ideias terá formado.\n\nPrefiro mil vezes ter esse controle na mão e escolher o melhor momento do que chegar nos 18 anos e ser surpreendido.\n\nE vocês, como pensam sobre isso? Fariam diferente?",
     obs: "Este é o post que vai receber o tráfego do anúncio da gravidez. Tema de pai falando com pais: a conexão acontece sozinha, sem precisar mencionar nada pessoal. Responder todos os comentários no mesmo dia.",
