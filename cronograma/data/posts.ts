@@ -46,6 +46,11 @@ interface PostBase {
    */
   destaqueExtra?: Record<number, string>;
   /**
+   * Entrelinha própria, quando o post já foi aprovado com outra. Sem isto, ele
+   * mudaria de aparência a cada ajuste do padrão.
+   */
+  entrelinha?: number;
+  /**
    * `"logo"` faz a arte ser só o logotipo, grande e centralizado, sem texto.
    * É a abertura do perfil. O campo `card` continua valendo como título na
    * linha do tempo.
@@ -111,6 +116,8 @@ export const posts: Post[] = [
     ],
     destaque: "Eu acho que não",
     destaqueExtra: { 4: "não é bem assim..." },
+    // Post fechado: fica na entrelinha com que foi aprovado.
+    entrelinha: 1.08,
     legenda:
       "Eventualmente me deparo com pais querendo abrir uma conta de investimento no nome do filho menor de idade, para já ir formando um patrimônio. A intenção é ótima. Mas eu sempre desaconselho, e o motivo é um só: controle.\n\nAos 18 anos o controle passa a ser total e irrestrito. E por mais bem educado que seja o nosso filho, ninguém sabe em que momento de vida ele vai estar aos 18: que companhias terá, que ideias terá formado.\n\nPrefiro mil vezes ter esse controle na mão e escolher o melhor momento do que chegar nos 18 anos e ser surpreendido.\n\nE vocês, como pensam sobre isso? Fariam diferente?",
     obs: "Este é o post que vai receber o tráfego do anúncio da gravidez. Tema de pai falando com pais: a conexão acontece sozinha, sem precisar mencionar nada pessoal. Responder todos os comentários no mesmo dia.",

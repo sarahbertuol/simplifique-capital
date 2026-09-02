@@ -238,7 +238,11 @@ function quebrarLinhas(
   return linhas;
 }
 
-const ENTRELINHA = 1.08;
+/**
+ * Entrelinha padrão. Um post pode pedir outra pelo campo `entrelinha`, que é
+ * como os posts já fechados ficam congelados no valor com que foram aprovados.
+ */
+const ENTRELINHA_PADRAO = 1.18;
 
 /**
  * Corpo alvo, como fração da largura, por comprimento do texto.
@@ -260,9 +264,17 @@ function corpoAlvo(texto: string): number {
  * É isto que controla o tamanho na prática, mais do que o corpo alvo. Texto
  * curto já cabe em duas ou três linhas no corpo máximo e passa reto; texto
  * longo é o que encolhe, porque oito linhas empilhadas não se leem num feed.
+ *
+ * Cada parágrafo extra ganha uma linha de folga. Sem isso, um texto de dois
+ * parágrafos é medido como se fosse corrido, mas a quebra de parágrafo obriga
+ * uma linha nova, e ele acaba com corpo bem menor do que um texto corrido do
+ * mesmo tamanho. Era o que fazia o slide dos "queremos acreditar" sair a 30px
+ * ao lado de um vizinho de 39px.
  */
 function maxLinhas(texto: string): number {
-  return texto.length <= 90 ? 3 : 4;
+  const base = texto.length <= 90 ? 3 : 4;
+  const paragrafos = texto.split("\n").filter((t) => t.trim() !== "").length;
+  return base + Math.max(paragrafos - 1, 0);
 }
 
 /**
@@ -277,6 +289,7 @@ function ajustarCorpo(
   larguraCaixa: number,
   alturaCaixa: number,
   alvo: number,
+  entrelinha: number,
 ): { corpo: number; linhas: Linha[] } {
   let corpo = alvo;
   let linhas: Linha[] = [];
@@ -289,7 +302,7 @@ function ajustarCorpo(
     ctx.font = `800 ${corpo}px ${familia}`;
     linhas = quebrarLinhas(ctx, paragrafos, larguraCaixa);
 
-    const cabeAltura = linhas.length * corpo * ENTRELINHA <= alturaCaixa;
+    const cabeAltura = linhas.length * corpo * entrelinha <= alturaCaixa;
     // A linha em branco entre parágrafos ocupa altura, mas não é linha de
     // leitura: contá-la no teto encolhia o texto sem motivo.
     const comTexto = linhas.filter((l) => l.length > 0).length;
@@ -424,6 +437,7 @@ export function desenharPeca(
   const caixaA = altura - margem * 2 - alturaLogo - vaoLogo;
 
   const paragrafos = tokenizar(peca.texto, peca.destaque);
+  const entrelinha = peca.post.entrelinha ?? ENTRELINHA_PADRAO;
 
   const { corpo, linhas } = ajustarCorpo(
     ctx,
@@ -433,18 +447,19 @@ export function desenharPeca(
     caixaL,
     caixaA,
     largura * corpoAlvo(peca.texto),
+    entrelinha,
   );
 
   ctx.font = `800 ${corpo}px ${familia}`;
   ctx.textBaseline = "top";
 
   // Sempre centralizado na altura e alinhado à esquerda.
-  const alturaTexto = linhas.length * corpo * ENTRELINHA;
+  const alturaTexto = linhas.length * corpo * entrelinha;
   const topo = margem + (caixaA - alturaTexto) / 2;
   const espaco = ctx.measureText(" ").width;
 
   linhas.forEach((linha, i) => {
-    const y = topo + i * corpo * ENTRELINHA;
+    const y = topo + i * corpo * entrelinha;
     let x = margem;
     for (const palavra of linha) {
       let cursor = x;
