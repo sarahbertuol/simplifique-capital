@@ -14,7 +14,7 @@ export default function Hero() {
         </h1>
         <p className="mb-10 max-w-[520px] text-[17px] leading-[1.65] text-white/75">
           Aprenda a montar e administrar sua própria carteira com orientação de
-          quem viveu o mercado financeiro por dentro — sem conflito de
+          quem viveu o mercado financeiro por dentro, sem conflito de
           interesses e com total transparência sobre custos e remuneração.
         </p>
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">

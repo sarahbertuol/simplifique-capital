@@ -17,7 +17,7 @@ export function whatsappFormHref(
   answers: [string, string | null | undefined][]
 ) {
   const lines = [
-    `Olá Marco, vim do site Simplifique Capital — ${formName}.`,
+    `Olá Marco, vim do site Simplifique Capital. Tenho interesse em ${formName}.`,
     "",
     ...answers
       .filter(([, value]) => value && value.trim())

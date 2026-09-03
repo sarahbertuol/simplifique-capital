@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { hojeISO } from "@/lib/cronograma";
 
-/** Data de hoje no fuso do aparelho — nunca muda enquanto a aba está viva. */
+/** Data de hoje no fuso do aparelho. Nunca muda enquanto a aba está viva. */
 const naoMuda = () => () => {};
 const noServidor = () => null;
 

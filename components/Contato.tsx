@@ -43,11 +43,18 @@ export default function Contato() {
   const [servico, setServico] = useState(SERVICO_OPTIONS[0]);
   const [patrimonio, setPatrimonio] = useState(PATRIMONIO_OPTIONS[0]);
   const [nivel, setNivel] = useState(NIVEL_OPTIONS[0]);
-  const [sending, setSending] = useState(false);
-  const [sendError, setSendError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [delivered, setDelivered] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  /** O aviso some assim que a pessoa corrige o campo. */
+  function clearError(key: string) {
+    setErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  }
 
   function validate() {
     const next: Record<string, string> = {};
@@ -61,30 +68,6 @@ export default function Contato() {
     return Object.keys(next).length === 0;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (sending) return;
-    if (!validate()) return;
-    setSending(true);
-    setSendError(false);
-    const result = await sendContactForm({
-      formName: "Vamos Começar",
-      nome: name,
-      email,
-      whatsapp: whats,
-      servico,
-      patrimonio,
-      nivel,
-    });
-    setSending(false);
-    if (result.received) {
-      setDelivered(result.delivered);
-      setSubmitted(true);
-    } else {
-      setSendError(true);
-    }
-  }
-
   const whatsappHref = whatsappFormHref("Vamos Começar", [
     ["Nome", name],
     ["E-mail", email],
@@ -93,6 +76,42 @@ export default function Contato() {
     ["Patrimônio aproximado", patrimonio],
     ["Nível de conhecimento", nivel],
   ]);
+
+  /**
+   * Registra o contato no servidor sem travar a tela: o visitante segue para o
+   * WhatsApp na hora. Se o e-mail estiver configurado, a mensagem também chega
+   * na caixa de entrada; se não, o lead fica no log do servidor.
+   */
+  function registrarEmSegundoPlano() {
+    void sendContactForm({
+      formName: "Vamos Começar",
+      nome: name,
+      email,
+      whatsapp: whats,
+      servico,
+      patrimonio,
+      nivel,
+    });
+  }
+
+  /** Clique no botão principal, que é um link para o WhatsApp. */
+  function handleWhatsappClick(e: React.MouseEvent) {
+    if (!validate()) {
+      e.preventDefault();
+      return;
+    }
+    registrarEmSegundoPlano();
+    setSubmitted(true);
+  }
+
+  /** Envio pelo Enter: não há clique em link, então abrimos a janela. */
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!validate()) return;
+    registrarEmSegundoPlano();
+    window.open(whatsappHref, "_blank", "noopener");
+    setSubmitted(true);
+  }
 
   return (
     <section id="contato" className="bg-green-800 px-8 py-24 md:px-16 lg:py-30">
@@ -121,26 +140,27 @@ export default function Contato() {
         {submitted ? (
           <div className="rounded-2xl bg-cream p-9 text-center text-green-700">
             <h4 className="mb-3.5 font-display text-2xl font-extrabold text-green-700">
-              Recebemos seu interesse!
+              Suas respostas estão no WhatsApp
             </h4>
             <p className="text-[15px] leading-[1.6] text-green-700/65">
-              Entraremos em contato em até 24h. Se preferir, você também
-              pode nos escrever em{" "}
+              Abrimos a conversa com tudo preenchido. É só tocar em enviar por
+              lá que o Marco recebe na hora.
+            </p>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 block rounded-lg bg-green-800 py-3.5 text-sm font-bold text-white"
+            >
+              Não abriu? Toque aqui
+            </a>
+            <p className="mt-4 text-[13px] leading-[1.6] text-green-700/50">
+              Prefere e-mail? Escreva para{" "}
               <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold">
                 {CONTACT_EMAIL}
               </a>
               .
             </p>
-            {!delivered && (
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 block rounded-lg bg-green-800 py-3.5 text-sm font-bold text-white"
-              >
-                Quer agilizar? Falar agora no WhatsApp
-              </a>
-            )}
           </div>
         ) : (
           <form
@@ -155,7 +175,10 @@ export default function Contato() {
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  clearError("nome");
+                }}
                 placeholder="Seu nome completo"
                 aria-invalid={Boolean(errors.nome)}
                 className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
@@ -173,7 +196,10 @@ export default function Contato() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  clearError("email");
+                }}
                 placeholder="voce@email.com"
                 aria-invalid={Boolean(errors.email)}
                 className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
@@ -191,7 +217,10 @@ export default function Contato() {
               <input
                 type="tel"
                 value={whats}
-                onChange={(e) => setWhats(e.target.value)}
+                onChange={(e) => {
+                  setWhats(e.target.value);
+                  clearError("whatsapp");
+                }}
                 placeholder="(00) 00000-0000"
                 aria-invalid={Boolean(errors.whatsapp)}
                 className={`rounded-lg border bg-white px-4 py-[13px] text-sm ${
@@ -244,31 +273,16 @@ export default function Contato() {
                 ))}
               </select>
             </div>
-            {sendError && (
-              <div className="mb-[18px] rounded-lg border border-[#b0402f]/25 bg-[#b0402f]/5 p-4">
-                <div className="mb-3 text-xs leading-[1.5] text-[#b0402f]">
-                  Não foi possível enviar seu formulário agora. Você pode
-                  tentar de novo ou mandar suas respostas pelo WhatsApp — elas
-                  já vão preenchidas na mensagem.
-                </div>
-                <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block rounded-lg bg-green-800 py-3 text-center text-sm font-bold text-white"
-                >
-                  Enviar respostas pelo WhatsApp
-                </a>
-              </div>
-            )}
-            <button
-              type="submit"
-              disabled={sending}
-              className="cta-trace relative mt-2 w-full cursor-pointer rounded-lg bg-green-800 py-4 text-[15px] font-bold text-white disabled:opacity-60"
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleWhatsappClick}
+              className="cta-trace relative mt-2 block w-full cursor-pointer rounded-lg bg-green-800 py-4 text-center text-[15px] font-bold text-white"
             >
-              {sending ? "Enviando..." : "Quero agendar uma conversa"}
+              Enviar respostas pelo WhatsApp
               <CtaTrace color="#c9982e" />
-            </button>
+            </a>
           </form>
         )}
       </div>

@@ -14,8 +14,8 @@ export default function Programa() {
           </h2>
           <p className="mb-9 max-w-[480px] text-base leading-[1.7] text-green-700/65">
             Um processo guiado para você entender sua situação financeira,
-            montar uma carteira sob medida e aprender a administrá-la sozinho
-            — com o suporte de quem já viveu o mercado por dentro. Nada de
+            montar uma carteira sob medida e aprender a administrá-la sozinho,
+            com o suporte de quem já viveu o mercado por dentro. Nada de
             fórmulas prontas: cada etapa é pensada para o seu momento, seus
             objetivos e seu perfil de risco.
           </p>

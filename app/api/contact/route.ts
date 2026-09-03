@@ -64,7 +64,7 @@ function normalize(fields: Record<string, unknown>) {
  */
 function logLead(text: string, motivo: string) {
   console.error(
-    `[LEAD-NAO-ENVIADO] ${new Date().toISOString()} — ${motivo}\n${text}\n[/LEAD-NAO-ENVIADO]`
+    `[LEAD-NAO-ENVIADO] ${new Date().toISOString()} | ${motivo}\n${text}\n[/LEAD-NAO-ENVIADO]`
   );
 }
 
@@ -75,7 +75,7 @@ function maskAddress(address: string) {
 }
 
 /**
- * Diagnóstico do serviço de e-mail — abrir /api/contact no navegador mostra se
+ * Diagnóstico do serviço de e-mail. Abrir /api/contact no navegador mostra se
  * as variáveis estão configuradas; /api/contact?verify=1 testa o login SMTP.
  * Nenhum segredo é exposto: só nomes de variáveis, endereço mascarado e o
  * código de erro do SMTP.
@@ -163,7 +163,7 @@ export async function POST(request: Request) {
   const title = formName.trim().slice(0, 120);
   const leadEmail = fields.find(([key]) => key === "email")?.[1];
   const text = [
-    `Novo contato — ${title}`,
+    `Novo contato: ${title}`,
     "",
     ...fields.map(([key, value]) => `${FIELD_LABELS[key] ?? key}: ${value}`),
   ].join("\n");
@@ -188,7 +188,7 @@ export async function POST(request: Request) {
 
   const html = `
     <div style="font-family:sans-serif;color:#152420;">
-      <h2 style="margin:0 0 16px;">Novo contato — ${escapeHtml(title)}</h2>
+      <h2 style="margin:0 0 16px;">Novo contato: ${escapeHtml(title)}</h2>
       <table style="border-collapse:collapse;">${rows}</table>
     </div>
   `;
@@ -200,7 +200,7 @@ export async function POST(request: Request) {
     to: CONTACT_EMAIL,
     cc: CONTACT_CC_EMAIL,
     replyTo: leadEmail && EMAIL_RE.test(leadEmail) ? leadEmail : undefined,
-    subject: `Novo contato — ${title}`,
+    subject: `Novo contato: ${title}`,
     text,
     html,
   });
