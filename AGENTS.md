@@ -22,3 +22,17 @@ devolve nada:
 ```
 grep -rnP "\x{2014}|\x{2013}" --include=*.tsx --include=*.ts --include=*.css --include=*.md . | grep -v node_modules
 ```
+
+# Deploy
+
+A Vercel publica o `master`. Trabalho que fica só numa branch não vai ao ar,
+por mais pronto que esteja.
+
+Portanto, ao terminar uma alteração pedida pela Sarah: commitar na branch de
+trabalho, abrir o pull request para o `master` e **mesclar assim que os checks
+passarem**, sem esperar revisão, a menos que ela peça o contrário. O trabalho só
+está entregue quando está no `master`.
+
+Se a branch de trabalho ficou para trás porque o `master` andou, rebasear sobre
+o `master` atual antes de abrir o PR, em vez de mesclar um estado antigo por
+cima do novo.
