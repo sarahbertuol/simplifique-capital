@@ -1,5 +1,5 @@
 /**
- * Cronograma editorial — Simplifique Capital
+ * Cronograma editorial da Simplifique Capital
  *
  * A copy destes posts está aprovada. Não reescreva o texto ao editar este
  * arquivo: acentuação e quebras de parágrafo (\n\n) fazem parte da legenda que
@@ -11,7 +11,7 @@
 /**
  * Os três pilares editoriais, mais duas categorias que existem de fato no
  * cronograma de setembro: a abertura do perfil e o post de apresentação. Não
- * são pilares de conteúdo — são posts institucionais de largada —, mas ficam
+ * são pilares de conteúdo, e sim posts institucionais de largada, mas ficam
  * aqui para que nenhum post suma quando você filtra.
  */
 export const PILARES = [

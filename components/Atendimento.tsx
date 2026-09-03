@@ -116,7 +116,7 @@ export default function Atendimento() {
         ))}
       </div>
       <p className="mx-auto mt-14 max-w-2xl text-center text-xs text-balance text-green-700/45 italic">
-        Marcas meramente ilustrativas — representam as plataformas de
+        Marcas meramente ilustrativas. Representam as plataformas de
         execução disponíveis via a infraestrutura white label.
       </p>
     </section>

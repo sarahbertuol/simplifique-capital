@@ -13,7 +13,7 @@ export default function Sobre() {
             Sobre Marco Kayser
           </h2>
           <p className="mb-5 text-base leading-[1.7] text-green-700/70">
-            Foram 4 anos como assessor de investimentos na XP Investimentos —
+            Foram 4 anos como assessor de investimentos na XP Investimentos,
             uma experiência que ajudou Marco a definir com clareza o tipo de
             trabalho que queria construir: sem conflito de interesses, com
             total transparência, e sempre pensando no que faz mais sentido
@@ -22,11 +22,11 @@ export default function Sobre() {
           <p className="mb-5 text-base leading-[1.7] text-green-700/70">
             Foi a partir dessa visão que nasceu o Programa de Educação
             Financeira: uma forma de simplificar o processo de investir, sem
-            produtos empurrados ou vieses de remuneração — só o que
+            produtos empurrados ou vieses de remuneração, só o que
             realmente faz sentido para o seu momento.
           </p>
           <p className="text-base leading-[1.7] text-green-700/70">
-            Aqui, a entrega é sempre o que você realmente precisa — sem
+            Aqui, a entrega é sempre o que você realmente precisa: sem
             letras miúdas, sem conflito de interesse, sem amarras. E o que
             ele ensina no programa é exatamente o que aplica na própria
             carteira.

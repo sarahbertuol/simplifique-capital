@@ -6,7 +6,7 @@ type Estado = "parado" | "copiado" | "falhou";
 
 /**
  * Copiar com confirmação visual. O rótulo muda no próprio botão em vez de
- * abrir um aviso flutuante — no celular, com o polegar em cima do botão, é o
+ * abrir um aviso flutuante. No celular, com o polegar em cima do botão, é o
  * único lugar onde a confirmação é vista.
  */
 export default function BotaoCopiar({

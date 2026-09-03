@@ -35,7 +35,7 @@ export type ContactResult = {
 
 /**
  * Envia o formulário para a API. Tenta uma segunda vez quando a falha é de
- * rede ou do servidor — falhas de SMTP costumam ser intermitentes.
+ * rede ou do servidor, já que falhas de SMTP costumam ser intermitentes.
  */
 export async function sendContactForm(
   payload: ContactPayload

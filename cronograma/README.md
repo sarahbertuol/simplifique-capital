@@ -1,16 +1,16 @@
-# Cronograma editorial — Simplifique Capital
+# Cronograma editorial da Simplifique Capital
 
 Ferramenta interna de planejamento do Instagram. Três telas: linha do tempo
 (`/`), grade de preview do feed (`/grade`) e o detalhe de cada post, que abre
 em painel sobre qualquer uma das duas.
 
 A arte de cada peça é gerada na hora, em canvas, e pode ser baixada em PNG
-1080x1350 pelo painel de detalhe — uma peça por vez ou todas de um carrossel de
+1080x1350 pelo painel de detalhe, uma peça por vez ou todas de um carrossel de
 uma vez. O desenho vive em `lib/arte.ts` e é a única fonte da verdade: a grade,
 o preview e o arquivo baixado saem da mesma função, então não há como a tela
 mostrar uma coisa e o arquivo sair outra.
 
-App independente. Não faz parte do site `simplifiquecapital.com.br` — só
+App independente. Não faz parte do site `simplifiquecapital.com.br`, só
 compartilha a identidade visual, documentada em `tokens.md`.
 
 ```bash
@@ -19,13 +19,13 @@ npm run dev
 ```
 
 Não tem banco. O que já foi publicado fica no `localStorage` do aparelho, na
-chave `simplifique-cronograma:publicados` — quer dizer: marcar no celular não
+chave `simplifique-cronograma:publicados`, quer dizer: marcar no celular não
 aparece no computador, e limpar os dados do navegador zera as marcações.
 
 ## Como adicionar um post novo
 
 Todo post mora em `data/posts.ts`, no array `posts`. A ordem no arquivo não
-importa — o app ordena por data. O formato decide quais campos existem, e o
+importa, porque o app ordena por data. O formato decide quais campos existem, e o
 TypeScript cobra: `slides` só existe em `Carrossel`, `roteiro` só em `Reels`.
 
 Campos comuns: `data` (ISO `AAAA-MM-DD`, e é o identificador do post), `pilar`,
@@ -33,7 +33,7 @@ Campos comuns: `data` (ISO `AAAA-MM-DD`, e é o identificador do post), `pilar`,
 daqui).
 
 O que vira arte depende do formato. Em `Card` e `Reels`, a arte é o `card`. Em
-`Carrossel`, cada slide vira uma arte, e a capa do feed é o **slide 1** — não o
+`Carrossel`, cada slide vira uma arte, e a capa do feed é o **slide 1**, não o
 `card`, que ali funciona só como título interno, usado na linha do tempo e na
 busca. Se você quer mudar o que aparece na capa de um carrossel, mexa no
 primeiro item de `slides`.
@@ -61,7 +61,7 @@ Os pilares são `Simplicidade`, `Transparência` e `Estratégia`. Existem ainda
 `Abertura` e `Apresentação`, que não são pilares de conteúdo: são os dois posts
 institucionais de largada de setembro. Ficam na mesma lista para que nenhum post
 suma quando você filtra. Se criar um pilar novo, adicione em `PILARES` e dê a ele
-um par de cores em `components/Ladrilho.tsx` — o TypeScript cobra.
+um par de cores em `components/Ladrilho.tsx`. O TypeScript cobra.
 
 Um `Reels` aceita `duracao` opcional (ex.: `"50s"`), que aparece ao lado do
 roteiro no detalhe.

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.simplifiquecapital.com.br"),
   title: "Simplifique Capital | Consultoria e Educação Financeira",
   description:
-    "Aprenda a montar e administrar sua própria carteira com orientação de Marco Kayser — sem conflito de interesses e com total transparência sobre custos e remuneração.",
+    "Aprenda a montar e administrar sua própria carteira com orientação de Marco Kayser, sem conflito de interesses e com total transparência sobre custos e remuneração.",
 };
 
 export default function RootLayout({

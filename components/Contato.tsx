@@ -143,7 +143,7 @@ export default function Contato() {
               Suas respostas estão no WhatsApp
             </h4>
             <p className="text-[15px] leading-[1.6] text-green-700/65">
-              Abrimos a conversa com tudo preenchido — é só tocar em enviar por
+              Abrimos a conversa com tudo preenchido. É só tocar em enviar por
               lá que o Marco recebe na hora.
             </p>
             <a

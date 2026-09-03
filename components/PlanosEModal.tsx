@@ -246,7 +246,7 @@ export default function PlanosEModal() {
             Programa de Educação Financeira
           </h2>
           <p className="text-base leading-[1.6] text-green-700/65">
-            Três formas de acompanhamento — escolha a que faz mais sentido
+            Três formas de acompanhamento. Escolha a que faz mais sentido
             para o seu momento.
           </p>
         </div>
@@ -569,7 +569,7 @@ export default function PlanosEModal() {
                 </h4>
                 <p className="text-[15px] leading-[1.6] text-green-700/65">
                   Abrimos a conversa com tudo preenchido sobre o plano{" "}
-                  <strong>{plan}</strong> — é só tocar em enviar por lá que o
+                  <strong>{plan}</strong>. É só tocar em enviar por lá que o
                   Marco recebe na hora.
                 </p>
                 <a

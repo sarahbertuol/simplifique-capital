@@ -40,14 +40,14 @@ This project is deployed at [simplifique-capital-site.vercel.app](https://simpli
 ## Formulários de contato
 
 Os dois formulários do site (seção "Vamos Começar" e o modal dos planos) abrem o
-WhatsApp com as respostas já preenchidas — esse é o caminho principal e não
+WhatsApp com as respostas já preenchidas. Esse é o caminho principal e não
 depende de nenhuma configuração.
 
 Em paralelo, cada envio é registrado em `/api/contact`. Se as variáveis abaixo
 estiverem configuradas, esse registro também vira um e-mail para
 `contato@simplifiquecapital.com.br` com cópia para
 `marco@simplifiquecapital.com.br`. Se não estiverem, o contato fica apenas no
-log da função, marcado com `[LEAD-NAO-ENVIADO]` — e o visitante não vê erro
+log da função, marcado com `[LEAD-NAO-ENVIADO]`, e o visitante não vê erro
 nenhum, porque o WhatsApp já resolveu o contato dele.
 
 ### Variáveis de ambiente do e-mail (opcionais)
@@ -64,7 +64,7 @@ A Senha de App é gerada em https://myaccount.google.com/apppasswords, com a
 verificação em duas etapas ativa na conta.
 
 Elas precisam estar cadastradas **no projeto da Vercel que serve o domínio**,
-no ambiente Production, seguidas de um redeploy — variável nova não vale para
+no ambiente Production, seguidas de um redeploy. Variável nova não vale para
 deploys já publicados.
 
 Para usar outro provedor de e-mail, basta definir `SMTP_HOST`, `SMTP_PORT`,

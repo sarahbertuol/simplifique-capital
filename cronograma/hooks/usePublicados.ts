@@ -6,7 +6,7 @@ const CHAVE = "simplifique-cronograma:publicados";
 const VAZIO: ReadonlySet<string> = new Set();
 
 /**
- * Quais posts já foram publicados. Vive só no navegador — não há banco.
+ * Quais posts já foram publicados. Vive só no navegador, não há banco.
  *
  * É um `useSyncExternalStore` e não um `useState` + `useEffect` porque
  * localStorage é exatamente isso: um estado externo ao React. O servidor

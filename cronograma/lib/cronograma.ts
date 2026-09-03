@@ -43,7 +43,7 @@ export function hojeISO(): string {
 
 /**
  * Primeira frase do card, para a linha do tempo. Corta no primeiro ponto final,
- * de interrogação ou exclamação — mas só se sobrar frase depois dele, senão o
+ * de interrogação ou exclamação, mas só se sobrar frase depois dele, senão o
  * card inteiro já é uma frase só e volta inteiro.
  */
 export function primeiraFrase(card: string): string {

@@ -5,7 +5,7 @@ import type { Pilar, Post } from "@/data/posts";
  *
  * É a única fonte da verdade do visual: a grade, o preview no detalhe e o
  * arquivo que você baixa saem todos daqui, na mesma função. Se fossem dois
- * desenhos — um em HTML para a tela, outro para o download — eles divergiriam
+ * desenhos, um em HTML para a tela e outro para o download, eles divergiriam
  * na primeira mudança.
  *
  * Tudo é proporcional à largura pedida, então a mesma função serve para um
@@ -247,7 +247,7 @@ const ENTRELINHA_PADRAO = 1.18;
 /**
  * Corpo alvo, como fração da largura, por comprimento do texto.
  *
- * Esta escala é a que já estava na grade e foi aprovada — não mexa nela para
+ * Esta escala é a que já estava na grade e foi aprovada. Não mexa nela para
  * "aproveitar melhor a caixa". Texto curto respira de propósito.
  */
 function corpoAlvo(texto: string): number {
@@ -306,8 +306,8 @@ function ajustarCorpo(
     // A linha em branco entre parágrafos ocupa altura, mas não é linha de
     // leitura: contá-la no teto encolhia o texto sem motivo.
     const comTexto = linhas.filter((l) => l.length > 0).length;
-    // Uma palavra sozinha pode ser mais larga que a caixa — "aposentadoria,"
-    // era o caso — e a quebra de linha não tem como resolver isso. Sem esta
+    // Uma palavra sozinha pode ser mais larga que a caixa. "aposentadoria,"
+    // era o caso, e a quebra de linha não tem como resolver isso. Sem esta
     // conferência de largura ela vazava pela margem direita da arte.
     const cabeLargura = linhas.every(
       (linha) => larguraDaLinha(ctx, linha) <= larguraCaixa,

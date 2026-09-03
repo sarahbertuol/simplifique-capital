@@ -5,7 +5,7 @@ import Arte from "./Arte";
 
 /**
  * Cores só dos rótulos sobrepostos ("Reels", "1/7") e das barras de estado.
- * As cores da arte em si vivem em `lib/arte.ts` — aqui é só o que fica por
+ * As cores da arte em si vivem em `lib/arte.ts`. Aqui é só o que fica por
  * cima do canvas e não entra no arquivo baixado.
  */
 const SOBREPOSTO: Record<Pilar, { sutil: string; marca: string }> = {
@@ -35,7 +35,7 @@ export default function Ladrilho({
       type="button"
       onClick={() => onSelecionar(post)}
       className="group relative block w-full [container-type:inline-size] cursor-pointer focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-gold"
-      aria-label={`${post.card} — ${post.formato}, ${post.pilar}`}
+      aria-label={`${post.card}. ${post.formato}, ${post.pilar}`}
     >
       <Arte post={post} indice={0} />
 

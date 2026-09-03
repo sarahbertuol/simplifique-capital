@@ -1,7 +1,7 @@
 /**
  * Nome real da família tipográfica do display.
  *
- * O canvas precisa de um nome de família de verdade em `ctx.font` — não aceita
+ * O canvas precisa de um nome de família de verdade em `ctx.font`, não aceita
  * `var(--font-poppins)`. O `next/font` gera um nome com sufixo aleatório a cada
  * build, então lemos do próprio CSS em vez de escrever à mão.
  */
