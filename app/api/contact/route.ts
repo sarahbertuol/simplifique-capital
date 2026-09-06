@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { CONTACT_CC_EMAIL, CONTACT_EMAIL } from "@/lib/contact";
+import { CONTACT_EMAIL, MARCO_EMAIL } from "@/lib/contact";
 import { resolveMailerConfig, sendMail, verifyMailer } from "@/lib/mailer";
 
 export const runtime = "nodejs";
@@ -100,7 +100,7 @@ export async function GET(request: Request) {
     ok: true,
     remetente: maskAddress(config.user),
     host: config.host,
-    destinatarios: [CONTACT_EMAIL, CONTACT_CC_EMAIL],
+    destinatarios: [CONTACT_EMAIL, MARCO_EMAIL],
   };
 
   const url = new URL(request.url);
@@ -198,7 +198,7 @@ export async function POST(request: Request) {
     // por isso o From é sempre a própria conta que envia.
     from: { name: "Site Simplifique Capital", address: config.user },
     to: CONTACT_EMAIL,
-    cc: CONTACT_CC_EMAIL,
+    cc: MARCO_EMAIL,
     replyTo: leadEmail && EMAIL_RE.test(leadEmail) ? leadEmail : undefined,
     subject: `Novo contato: ${title}`,
     text,
