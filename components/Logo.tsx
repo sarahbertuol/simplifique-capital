@@ -1,6 +1,7 @@
 const SIZES = {
   nav: { text: "text-[19px]", bars: [9, 14, 19] },
   footer: { text: "text-[16px]", bars: [7, 12, 16] },
+  large: { text: "text-[26px]", bars: [12, 19, 26] },
 } as const;
 
 export default function Logo({ size = "nav" }: { size?: keyof typeof SIZES }) {

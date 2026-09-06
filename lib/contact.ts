@@ -1,7 +1,7 @@
 export const CONTACT_EMAIL = "contato@simplifiquecapital.com.br";
 
-/** Cópia de todas as respostas dos formulários. */
-export const CONTACT_CC_EMAIL = "marco@simplifiquecapital.com.br";
+/** Endereço pessoal do Marco. Recebe cópia de todas as respostas dos formulários. */
+export const MARCO_EMAIL = "marco@simplifiquecapital.com.br";
 
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 

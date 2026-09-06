@@ -2,9 +2,12 @@ const WHATSAPP_NUMBER = "5551993690120";
 const WHATSAPP_MESSAGE =
   "Olá Marco, vim do site Simplifique Capital e gostaria de saber mais sobre o programa.";
 
-export const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  WHATSAPP_MESSAGE
-)}`;
+/** Link do WhatsApp com uma mensagem já escrita na conversa. */
+export function whatsappHref(mensagem: string) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensagem)}`;
+}
+
+export const WHATSAPP_HREF = whatsappHref(WHATSAPP_MESSAGE);
 
 export const WHATSAPP_DISPLAY = "(51) 99369-0120";
 
@@ -23,7 +26,5 @@ export function whatsappFormHref(
       .filter(([, value]) => value && value.trim())
       .map(([label, value]) => `${label}: ${value!.trim()}`),
   ];
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    lines.join("\n")
-  )}`;
+  return whatsappHref(lines.join("\n"));
 }
