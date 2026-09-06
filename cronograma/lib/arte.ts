@@ -97,6 +97,11 @@ export interface Peca {
   destaque?: string;
   /** Peça sem texto: só o logotipo, grande e centralizado. */
   soLogo: boolean;
+  /**
+   * O logotipo sai do rodapé, sobe colado ao texto, centralizado na largura e
+   * maior que o das outras peças. É o fecho de um carrossel.
+   */
+  logoCentral: boolean;
 }
 
 /** Todas as peças de um post, na ordem em que vão ao ar. */
@@ -110,6 +115,8 @@ export function pecasDoPost(post: Post): Peca[] {
       // pedir, por `destaqueExtra`. Destaque em todo slide deixa de destacar.
       destaque: i === 0 ? post.destaque : post.destaqueExtra?.[i],
       soLogo: false,
+      // `logoDestaque` vem em base 1, como o slide é contado no cronograma.
+      logoCentral: post.logoDestaque === i + 1,
     }));
   }
   return [
@@ -119,6 +126,7 @@ export function pecasDoPost(post: Post): Peca[] {
       texto: post.card,
       destaque: post.destaque,
       soLogo: post.arte === "logo",
+      logoCentral: false,
     },
   ];
 }
@@ -359,6 +367,22 @@ function larguraDoLogo(
   );
 }
 
+/** Corpo do logotipo que faz o conjunto ocupar `alvo` de largura. */
+function corpoParaLargura(
+  ctx: CanvasRenderingContext2D,
+  alvo: number,
+  familia: string,
+): number {
+  let baixo = 4;
+  let alto = alvo;
+  for (let i = 0; i < 40; i++) {
+    const meio = (baixo + alto) / 2;
+    if (larguraDoLogo(ctx, meio, familia) <= alvo) baixo = meio;
+    else alto = meio;
+  }
+  return baixo;
+}
+
 /** Desenha o logotipo com a base do conjunto em `baseY` e começando em `x`. */
 function desenharLogo(
   ctx: CanvasRenderingContext2D,
@@ -415,23 +439,19 @@ export function desenharPeca(
 
   if (peca.soLogo) {
     // Logotipo ocupando 84% da largura, centralizado nos dois eixos.
-    const alvo = largura * 0.84;
-    let baixo = 4;
-    let alto = largura;
-    for (let i = 0; i < 40; i++) {
-      const meio = (baixo + alto) / 2;
-      if (larguraDoLogo(ctx, meio, familia) <= alvo) baixo = meio;
-      else alto = meio;
-    }
-    const corpo = baixo;
+    const corpo = corpoParaLargura(ctx, largura * 0.84, familia);
     const x = (largura - larguraDoLogo(ctx, corpo, familia)) / 2;
     desenharLogo(ctx, paleta, x, altura / 2 + corpo / 2, corpo, familia);
     return;
   }
 
   // O logotipo entra em toda peça, então o espaço dele é sempre reservado.
-  const alturaLogo = largura * 0.038;
-  const vaoLogo = largura * 0.055;
+  // No slide de fecho ele é maior e sobe para junto do texto, o que muda tanto
+  // o quanto ele ocupa quanto onde é desenhado.
+  const alturaLogo = peca.logoCentral
+    ? corpoParaLargura(ctx, largura * 0.6, familia)
+    : largura * 0.038;
+  const vaoLogo = peca.logoCentral ? largura * 0.08 : largura * 0.055;
 
   const caixaL = largura - margem * 2;
   const caixaA = altura - margem * 2 - alturaLogo - vaoLogo;
@@ -453,9 +473,17 @@ export function desenharPeca(
   ctx.font = `800 ${corpo}px ${familia}`;
   ctx.textBaseline = "top";
 
-  // Sempre centralizado na altura e alinhado à esquerda.
+  // Sempre centralizado na altura e alinhado à esquerda. No slide de fecho o
+  // que se centraliza é o conjunto texto + logotipo, para que os dois subam
+  // juntos e o logo fique colado ao texto em vez de no rodapé.
   const alturaTexto = linhas.length * corpo * entrelinha;
-  const topo = margem + (caixaA - alturaTexto) / 2;
+  const disponivel = altura - margem * 2;
+  const alturaGrupo = peca.logoCentral
+    ? alturaTexto + vaoLogo + alturaLogo
+    : alturaTexto;
+  const topo = peca.logoCentral
+    ? margem + (disponivel - alturaGrupo) / 2
+    : margem + (caixaA - alturaTexto) / 2;
   const espaco = ctx.measureText(" ").width;
 
   linhas.forEach((linha, i) => {
@@ -474,5 +502,17 @@ export function desenharPeca(
     }
   });
 
-  desenharLogo(ctx, paleta, margem, altura - margem, alturaLogo, familia);
+  if (peca.logoCentral) {
+    const larguraLogo = larguraDoLogo(ctx, alturaLogo, familia);
+    desenharLogo(
+      ctx,
+      paleta,
+      (largura - larguraLogo) / 2,
+      topo + alturaTexto + vaoLogo + alturaLogo,
+      alturaLogo,
+      familia,
+    );
+  } else {
+    desenharLogo(ctx, paleta, margem, altura - margem, alturaLogo, familia);
+  }
 }

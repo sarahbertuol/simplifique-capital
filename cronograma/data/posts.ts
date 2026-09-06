@@ -14,6 +14,9 @@
  * são pilares de conteúdo — são posts institucionais de largada —, mas ficam
  * aqui para que nenhum post suma quando você filtra.
  */
+/** Onde o post está no fluxo editorial. */
+export const STATUS = ["publicado", "proximo", "pendente"] as const;
+
 export const PILARES = [
   "Simplicidade",
   "Transparência",
@@ -23,6 +26,7 @@ export const PILARES = [
 ] as const;
 export const FORMATOS = ["Card", "Carrossel", "Reels"] as const;
 
+export type Status = (typeof STATUS)[number];
 export type Pilar = (typeof PILARES)[number];
 export type Formato = (typeof FORMATOS)[number];
 
@@ -30,6 +34,11 @@ export type Formato = (typeof FORMATOS)[number];
 interface PostBase {
   /** Data de publicação, ISO `YYYY-MM-DD`. Também serve de identificador. */
   data: string;
+  /**
+   * Situação no fluxo editorial, vinda do cronograma. É diferente do "marcar
+   * como publicado" do painel, que é uma marcação local do aparelho.
+   */
+  status: Status;
   pilar: Pilar;
   /** Texto que aparece na arte. É o que a grade de feed renderiza. */
   card: string;
@@ -45,6 +54,11 @@ interface PostBase {
    * carrossel.
    */
   destaqueExtra?: Record<number, string>;
+  /**
+   * Slide (base 1) em que o logotipo sai do rodapé, sobe centralizado logo
+   * abaixo do texto e é desenhado maior. Só faz sentido em carrossel.
+   */
+  logoDestaque?: number;
   /**
    * Entrelinha própria, quando o post já foi aprovado com outra. Sem isto, ele
    * mudaria de aparência a cada ajuste do padrão.
@@ -90,6 +104,7 @@ export const posts: Post[] = [
   // ---------------------------------------------------------------------------
   {
     data: "2026-09-01",
+    status: "publicado",
     formato: "Card",
     pilar: "Abertura",
     card: "Simplifique Capital",
@@ -100,6 +115,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-03",
+    status: "publicado",
     formato: "Carrossel",
     pilar: "Estratégia",
     card: "Conta de investimento para filho menor de idade, é uma boa ideia?",
@@ -124,6 +140,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-08",
+    status: "pendente",
     formato: "Carrossel",
     pilar: "Apresentação",
     card: "E se investir bem fosse muito mais simples do que você imagina?",
@@ -146,6 +163,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-10",
+    status: "pendente",
     formato: "Card",
     pilar: "Simplicidade",
     card: "Para a maioria das pessoas, o ETF é a forma mais eficiente de investir em ações.",
@@ -156,6 +174,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-12",
+    status: "pendente",
     formato: "Reels",
     pilar: "Estratégia",
     card: "O segredo é não se movimentar",
@@ -169,6 +188,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-15",
+    status: "pendente",
     formato: "Card",
     pilar: "Transparência",
     card: "Não acredite em mim. Faça esta pergunta ao ChatGPT: \"Por que as corretoras brasileiras raramente incentivam a compra de ETFs?\"",
@@ -179,6 +199,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-17",
+    status: "pendente",
     formato: "Carrossel",
     pilar: "Transparência",
     card: "Dois por cento ao ano parece pouco. Em vinte anos, não é.",
@@ -196,6 +217,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-19",
+    status: "pendente",
     formato: "Reels",
     pilar: "Simplicidade",
     card: "Reserva de emergência",
@@ -207,6 +229,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-22",
+    status: "pendente",
     formato: "Card",
     pilar: "Simplicidade",
     card: "Se você não consegue explicar seu investimento em uma frase, ele provavelmente não foi feito para você.",
@@ -216,6 +239,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-24",
+    status: "pendente",
     formato: "Carrossel",
     pilar: "Transparência",
     card: "Três coisas que raramente te contam antes de te venderem um investimento.",
@@ -232,6 +256,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-26",
+    status: "pendente",
     formato: "Reels",
     pilar: "Transparência",
     card: "Como eu ganho dinheiro",
@@ -245,6 +270,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-09-29",
+    status: "pendente",
     formato: "Card",
     pilar: "Estratégia",
     card: "Pergunte ao ChatGPT: \"Se eu pago 2% de taxa ao ano por 20 anos, quanto do meu patrimônio final vai embora só em taxa?\"",
@@ -258,6 +284,7 @@ export const posts: Post[] = [
   // ---------------------------------------------------------------------------
   {
     data: "2026-10-02",
+    status: "pendente",
     formato: "Card",
     pilar: "Estratégia",
     card: "Quanto você precisa ter guardado para parar de trabalhar? Existe um número, e ele é seu.",
@@ -268,6 +295,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-10-05",
+    status: "pendente",
     formato: "Carrossel",
     pilar: "Simplicidade",
     card: "A conta da aposentadoria, em quatro passos",
@@ -286,6 +314,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-10-07",
+    status: "pendente",
     formato: "Reels",
     pilar: "Estratégia",
     card: "Aposentadoria não é uma idade. É um número.",
@@ -296,6 +325,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-10-09",
+    status: "pendente",
     formato: "Card",
     pilar: "Transparência",
     card: "Se você parasse de trabalhar hoje, seu dinheiro duraria quantos meses?",
@@ -305,6 +335,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-10-12",
+    status: "pendente",
     formato: "Carrossel",
     pilar: "Simplicidade",
     card: "ETF é uma cesta pronta",
@@ -324,6 +355,7 @@ export const posts: Post[] = [
   },
   {
     data: "2026-10-14",
+    status: "pendente",
     formato: "Carrossel",
     pilar: "Estratégia",
     card: "Três erros comuns no plano de aposentadoria",
