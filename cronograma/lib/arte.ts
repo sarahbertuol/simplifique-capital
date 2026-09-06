@@ -102,6 +102,8 @@ export interface Peca {
    * maior que o das outras peças. É o fecho de um carrossel.
    */
   logoCentral: boolean;
+  /** Linha secundária do slide de fecho, menor e esmaecida. */
+  subtexto?: string;
 }
 
 /** Todas as peças de um post, na ordem em que vão ao ar. */
@@ -117,6 +119,8 @@ export function pecasDoPost(post: Post): Peca[] {
       soLogo: false,
       // `logoDestaque` vem em base 1, como o slide é contado no cronograma.
       logoCentral: post.logoDestaque === i + 1,
+      subtexto:
+        post.logoDestaque === i + 1 ? post.subtextoFecho : undefined,
     }));
   }
   return [
@@ -453,8 +457,16 @@ export function desenharPeca(
     : largura * 0.038;
   const vaoLogo = peca.logoCentral ? largura * 0.08 : largura * 0.055;
 
+  // O subtexto de fecho tem corpo fixo, e não derivado do texto principal: se
+  // dependesse dele a conta viraria circular, porque o corpo do texto só é
+  // conhecido depois de saber quanta altura sobrou.
+  const corpoSub = largura * 0.04;
+  const alturaSub = peca.subtexto ? corpoSub * 1.2 : 0;
+  const vaoSub = peca.subtexto ? largura * 0.035 : 0;
+
   const caixaL = largura - margem * 2;
-  const caixaA = altura - margem * 2 - alturaLogo - vaoLogo;
+  const caixaA =
+    altura - margem * 2 - alturaLogo - vaoLogo - alturaSub - vaoSub;
 
   const paragrafos = tokenizar(peca.texto, peca.destaque);
   const entrelinha = peca.post.entrelinha ?? ENTRELINHA_PADRAO;
@@ -479,7 +491,7 @@ export function desenharPeca(
   const alturaTexto = linhas.length * corpo * entrelinha;
   const disponivel = altura - margem * 2;
   const alturaGrupo = peca.logoCentral
-    ? alturaTexto + vaoLogo + alturaLogo
+    ? alturaTexto + vaoSub + alturaSub + vaoLogo + alturaLogo
     : alturaTexto;
   const topo = peca.logoCentral
     ? margem + (disponivel - alturaGrupo) / 2
@@ -488,7 +500,10 @@ export function desenharPeca(
 
   linhas.forEach((linha, i) => {
     const y = topo + i * corpo * entrelinha;
-    let x = margem;
+    // O slide de fecho centraliza o texto; os demais ficam alinhados à esquerda.
+    let x = peca.logoCentral
+      ? margem + (caixaL - larguraDaLinha(ctx, linha)) / 2
+      : margem;
     for (const palavra of linha) {
       let cursor = x;
       for (const seg of palavra.segmentos) {
@@ -503,12 +518,26 @@ export function desenharPeca(
   });
 
   if (peca.logoCentral) {
+    if (peca.subtexto) {
+      ctx.font = `600 ${corpoSub}px ${familia}`;
+      ctx.textBaseline = "top";
+      ctx.fillStyle = paleta.texto;
+      ctx.globalAlpha = 0.55;
+      const larguraSub = ctx.measureText(peca.subtexto).width;
+      ctx.fillText(
+        peca.subtexto,
+        margem + (caixaL - larguraSub) / 2,
+        topo + alturaTexto + vaoSub,
+      );
+      ctx.globalAlpha = 1;
+    }
+
     const larguraLogo = larguraDoLogo(ctx, alturaLogo, familia);
     desenharLogo(
       ctx,
       paleta,
       (largura - larguraLogo) / 2,
-      topo + alturaTexto + vaoLogo + alturaLogo,
+      topo + alturaTexto + vaoSub + alturaSub + vaoLogo + alturaLogo,
       alturaLogo,
       familia,
     );

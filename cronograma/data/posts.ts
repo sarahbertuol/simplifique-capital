@@ -55,6 +55,11 @@ interface PostBase {
    */
   destaqueExtra?: Record<number, string>;
   /**
+   * Linha secundária do slide de fecho, em corpo menor e opacidade reduzida.
+   * Aparece no mesmo slide indicado por `logoDestaque`.
+   */
+  subtextoFecho?: string;
+  /**
    * Slide (base 1) em que o logotipo sai do rodapé, sobe centralizado logo
    * abaixo do texto e é desenhado maior. Só faz sentido em carrossel.
    */
@@ -151,15 +156,15 @@ export const posts: Post[] = [
       "Não precisa acompanhar dezenas de notícias.",
       "Não precisa escolher o próximo investimento que vai \u201cbombar\u201d.",
       "E, principalmente, não precisa pagar caro para investir.",
-      "A Simplifique Capital nasceu de uma ideia simples:\n\nInvestir pode ser simples, eficiente, barato e descomplicado.",
-      "Através de uma estratégia diversificada e baseada em índices, buscamos capturar o retorno do mercado no longo prazo, sem tentar adivinhar o que vai acontecer amanhã.",
-      "E existe um dado que chama atenção: estratégias passivas de baixo custo conseguem superar, no longo prazo, mais de 90% dos gestores profissionais, dependendo do mercado e do período analisado.",
-      "Se até profissionais têm dificuldade para vencer o mercado consistentemente...\n\npor que tornar sua vida mais complicada tentando fazer isso?",
-      "Simplifique. Invista. Deixe o tempo trabalhar.",
+      "Ao contrário do que a indústria repete, existe um jeito simples de investir. Ele só não é vendido.",
+      "É esse jeito que eu te ajudo a construir. Me chame para uma conversa.",
     ],
     destaque: "muito mais simples",
+    destaqueExtra: { 6: "simples" },
+    logoDestaque: 8,
+    subtextoFecho: "(link na bio)",
     legenda:
-      "Passei quatro anos como assessor de investimentos e vi de perto como o mercado funciona por dentro. A Simplifique Capital nasceu da decisão de trabalhar do outro lado da mesa.\n\nO modelo é de valor fixo, pago por você. Não recebo comissão de corretora, banco ou gestora. Se eu recomendo alguma coisa, é porque faz sentido para o seu caso.\n\nQualquer dúvida, é só chamar aqui.",
+      "Você não precisa virar analista para investir bem. Precisa de uma carteira que faça sentido para o seu prazo e de disciplina para não mexer nela toda semana.\n\nO resto é ruído, e ruído costuma ter uma taxa embutida.\n\nSe quiser entender como isso se aplica ao seu caso, me chame no direct.",
   },
   {
     data: "2026-09-10",
