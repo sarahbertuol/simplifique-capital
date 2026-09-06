@@ -97,6 +97,13 @@ export interface Peca {
   destaque?: string;
   /** Peça sem texto: só o logotipo, grande e centralizado. */
   soLogo: boolean;
+  /**
+   * O logotipo sai do rodapé, sobe colado ao texto, centralizado na largura e
+   * maior que o das outras peças. É o fecho de um carrossel.
+   */
+  logoCentral: boolean;
+  /** Linha secundária do slide de fecho, menor e esmaecida. */
+  subtexto?: string;
 }
 
 /** Todas as peças de um post, na ordem em que vão ao ar. */
@@ -110,6 +117,10 @@ export function pecasDoPost(post: Post): Peca[] {
       // pedir, por `destaqueExtra`. Destaque em todo slide deixa de destacar.
       destaque: i === 0 ? post.destaque : post.destaqueExtra?.[i],
       soLogo: false,
+      // `logoDestaque` vem em base 1, como o slide é contado no cronograma.
+      logoCentral: post.logoDestaque === i + 1,
+      subtexto:
+        post.logoDestaque === i + 1 ? post.subtextoFecho : undefined,
     }));
   }
   return [
@@ -119,6 +130,7 @@ export function pecasDoPost(post: Post): Peca[] {
       texto: post.card,
       destaque: post.destaque,
       soLogo: post.arte === "logo",
+      logoCentral: false,
     },
   ];
 }
@@ -359,6 +371,22 @@ function larguraDoLogo(
   );
 }
 
+/** Corpo do logotipo que faz o conjunto ocupar `alvo` de largura. */
+function corpoParaLargura(
+  ctx: CanvasRenderingContext2D,
+  alvo: number,
+  familia: string,
+): number {
+  let baixo = 4;
+  let alto = alvo;
+  for (let i = 0; i < 40; i++) {
+    const meio = (baixo + alto) / 2;
+    if (larguraDoLogo(ctx, meio, familia) <= alvo) baixo = meio;
+    else alto = meio;
+  }
+  return baixo;
+}
+
 /** Desenha o logotipo com a base do conjunto em `baseY` e começando em `x`. */
 function desenharLogo(
   ctx: CanvasRenderingContext2D,
@@ -415,26 +443,30 @@ export function desenharPeca(
 
   if (peca.soLogo) {
     // Logotipo ocupando 84% da largura, centralizado nos dois eixos.
-    const alvo = largura * 0.84;
-    let baixo = 4;
-    let alto = largura;
-    for (let i = 0; i < 40; i++) {
-      const meio = (baixo + alto) / 2;
-      if (larguraDoLogo(ctx, meio, familia) <= alvo) baixo = meio;
-      else alto = meio;
-    }
-    const corpo = baixo;
+    const corpo = corpoParaLargura(ctx, largura * 0.84, familia);
     const x = (largura - larguraDoLogo(ctx, corpo, familia)) / 2;
     desenharLogo(ctx, paleta, x, altura / 2 + corpo / 2, corpo, familia);
     return;
   }
 
   // O logotipo entra em toda peça, então o espaço dele é sempre reservado.
-  const alturaLogo = largura * 0.038;
-  const vaoLogo = largura * 0.055;
+  // No slide de fecho ele é maior e sobe para junto do texto, o que muda tanto
+  // o quanto ele ocupa quanto onde é desenhado.
+  const alturaLogo = peca.logoCentral
+    ? corpoParaLargura(ctx, largura * 0.6, familia)
+    : largura * 0.038;
+  const vaoLogo = peca.logoCentral ? largura * 0.08 : largura * 0.055;
+
+  // O subtexto de fecho tem corpo fixo, e não derivado do texto principal: se
+  // dependesse dele a conta viraria circular, porque o corpo do texto só é
+  // conhecido depois de saber quanta altura sobrou.
+  const corpoSub = largura * 0.04;
+  const alturaSub = peca.subtexto ? corpoSub * 1.2 : 0;
+  const vaoSub = peca.subtexto ? largura * 0.035 : 0;
 
   const caixaL = largura - margem * 2;
-  const caixaA = altura - margem * 2 - alturaLogo - vaoLogo;
+  const caixaA =
+    altura - margem * 2 - alturaLogo - vaoLogo - alturaSub - vaoSub;
 
   const paragrafos = tokenizar(peca.texto, peca.destaque);
   const entrelinha = peca.post.entrelinha ?? ENTRELINHA_PADRAO;
@@ -453,14 +485,25 @@ export function desenharPeca(
   ctx.font = `800 ${corpo}px ${familia}`;
   ctx.textBaseline = "top";
 
-  // Sempre centralizado na altura e alinhado à esquerda.
+  // Sempre centralizado na altura e alinhado à esquerda. No slide de fecho o
+  // que se centraliza é o conjunto texto + logotipo, para que os dois subam
+  // juntos e o logo fique colado ao texto em vez de no rodapé.
   const alturaTexto = linhas.length * corpo * entrelinha;
-  const topo = margem + (caixaA - alturaTexto) / 2;
+  const disponivel = altura - margem * 2;
+  const alturaGrupo = peca.logoCentral
+    ? alturaTexto + vaoSub + alturaSub + vaoLogo + alturaLogo
+    : alturaTexto;
+  const topo = peca.logoCentral
+    ? margem + (disponivel - alturaGrupo) / 2
+    : margem + (caixaA - alturaTexto) / 2;
   const espaco = ctx.measureText(" ").width;
 
   linhas.forEach((linha, i) => {
     const y = topo + i * corpo * entrelinha;
-    let x = margem;
+    // O slide de fecho centraliza o texto; os demais ficam alinhados à esquerda.
+    let x = peca.logoCentral
+      ? margem + (caixaL - larguraDaLinha(ctx, linha)) / 2
+      : margem;
     for (const palavra of linha) {
       let cursor = x;
       for (const seg of palavra.segmentos) {
@@ -474,5 +517,31 @@ export function desenharPeca(
     }
   });
 
-  desenharLogo(ctx, paleta, margem, altura - margem, alturaLogo, familia);
+  if (peca.logoCentral) {
+    if (peca.subtexto) {
+      ctx.font = `600 ${corpoSub}px ${familia}`;
+      ctx.textBaseline = "top";
+      ctx.fillStyle = paleta.texto;
+      ctx.globalAlpha = 0.55;
+      const larguraSub = ctx.measureText(peca.subtexto).width;
+      ctx.fillText(
+        peca.subtexto,
+        margem + (caixaL - larguraSub) / 2,
+        topo + alturaTexto + vaoSub,
+      );
+      ctx.globalAlpha = 1;
+    }
+
+    const larguraLogo = larguraDoLogo(ctx, alturaLogo, familia);
+    desenharLogo(
+      ctx,
+      paleta,
+      (largura - larguraLogo) / 2,
+      topo + alturaTexto + vaoSub + alturaSub + vaoLogo + alturaLogo,
+      alturaLogo,
+      familia,
+    );
+  } else {
+    desenharLogo(ctx, paleta, margem, altura - margem, alturaLogo, familia);
+  }
 }

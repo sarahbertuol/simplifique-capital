@@ -86,7 +86,11 @@ export default function Detalhe({
                 Slides
               </h3>
               <span className="font-sans text-[13px] text-green-700/70">
-                {`${post.slides.length} artes \u00b7 o logotipo entra no último`}
+                {`${post.slides.length} artes${
+                  post.logoDestaque
+                    ? " \u00b7 o logotipo entra ampliado no último"
+                    : ""
+                }`}
               </span>
             </div>
             <ol className="mt-4 grid grid-cols-2 gap-3">

@@ -50,8 +50,10 @@ export default function LinhaDoTempo({ posts }: { posts: Post[] }) {
       )}
 
       {meses.map((mes) => {
-        const publicadosNoMes = mes.posts.filter((p) =>
-          publicados.has(p.data),
+        // Conta as duas origens: o `status` do cronograma e a marcação local
+        // do aparelho. Assim nada que você marcou aqui some da contagem.
+        const publicadosNoMes = mes.posts.filter(
+          (p) => p.status === "publicado" || publicados.has(p.data),
         ).length;
 
         return (
@@ -68,7 +70,8 @@ export default function LinhaDoTempo({ posts }: { posts: Post[] }) {
               {mes.posts.map((post) => {
                 const eHoje = post.data === hoje;
                 const passado = hoje !== null && post.data < hoje;
-                const publicado = publicados.has(post.data);
+                const publicado =
+                  post.status === "publicado" || publicados.has(post.data);
 
                 return (
                   <li key={post.data}>
@@ -102,6 +105,14 @@ export default function LinhaDoTempo({ posts }: { posts: Post[] }) {
                           className={`mt-2.5 block font-sans text-[13px] ${eHoje ? "text-cream/65" : "text-green-700/70"}`}
                         >
                           {post.formato} &middot; {post.pilar}
+                          {post.status === "proximo" && !publicado && (
+                            <span
+                              className={eHoje ? "text-gold" : "text-gold-dark"}
+                            >
+                              {" "}
+                              &middot; próximo
+                            </span>
+                          )}
                           {publicado && (
                             <span
                               className={
