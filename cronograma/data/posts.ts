@@ -196,7 +196,7 @@ export const posts: Post[] = [
     status: "pendente",
     formato: "Card",
     pilar: "Transparência",
-    card: "Não acredite em mim. Faça esta pergunta ao ChatGPT: \"Por que as corretoras brasileiras raramente incentivam a compra de ETFs?\"",
+    card: "Não acredite em mim. Faça esta pergunta ao ChatGPT: \"Por que os assessores de investimentos nunca indicam ETFs?\"",
     destaque: "Não acredite em mim.",
     legenda:
       "Não precisa confiar na minha palavra. Pergunte para uma fonte que não tem nada a ganhar com a sua resposta.\n\nA explicação é simples: produto com taxa maior remunera melhor quem distribui. ETF quase não deixa margem para quem vende. Não é conspiração, é incentivo, e incentivo explica quase tudo no mercado financeiro.\n\nComente ETF aqui embaixo que eu mando o prompt completo no seu direct, junto com o que observar na resposta.",
